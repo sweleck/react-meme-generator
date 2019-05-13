@@ -79,6 +79,6 @@ export const defaultQuality = 0.50
 
 
 export const previewContentStyle = {
-    width: 300,
-    height: 300
+    width: 500,
+    height: 500
 }

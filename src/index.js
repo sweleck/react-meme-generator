@@ -127,10 +127,10 @@ class ReactMemeGenerator extends PureComponent {
       .then(dataUrl => {
         this.setState({ drawLoading: false });
         Modal.confirm({
-          title: "生成成功",
+          title: "Success",
           content: <img src={dataUrl} style={{ maxWidth: "100%" }} />,
           onOk: () => {
-            message.success("下载成功!");
+            message.success("Download successful!");
             const filename = Date.now()
             const ext = isCompress ? 'jpeg' : 'png'
             var link = document.createElement("a");
@@ -138,8 +138,8 @@ class ReactMemeGenerator extends PureComponent {
             link.href = dataUrl;
             link.click();
           },
-          okText: "立即下载",
-          cancelText: "再改一改"
+          okText: "Download",
+          cancelText: "Re-start"
         });
       })
       .catch(err => {
@@ -164,7 +164,7 @@ class ReactMemeGenerator extends PureComponent {
       this.setState({ scale: defaultRotate });
     }
   };
-  //文字鼠标滚轮缩放
+
   bindTextWheel = e => {
     e.stopPropagation();
     const y = e.deltaY ? e.deltaY : e.wheelDeltaY;
@@ -859,7 +859,7 @@ class ReactMemeGenerator extends PureComponent {
                       width:"100%"
                     }}
                   >
-                    {drawLoading ? "Wait a moment..." : "Generating..."}
+                    {drawLoading ? "Wait a moment..." : "Generate"}
                   </Button>
                 </Col>
               </Row>
