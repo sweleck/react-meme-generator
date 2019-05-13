@@ -64,7 +64,7 @@ class ReactMemeGenerator extends PureComponent {
     text: defaultFontText,
     font: fontFamily[0].value,
     loadingImgReady: false,
-    dragAreaClass: false, //拖拽区域active class
+    dragAreaClass: false,
     textDragX: 0,
     textDragY: 0,
     imageDragX: 0,
@@ -167,7 +167,7 @@ class ReactMemeGenerator extends PureComponent {
   //文字鼠标滚轮缩放
   bindTextWheel = e => {
     e.stopPropagation();
-    const y = e.deltaY ? e.deltaY : e.wheelDeltaY; //火狐有特殊
+    const y = e.deltaY ? e.deltaY : e.wheelDeltaY;
     const [min, max] = textWhellScaleRange;
     this.setState(({ fontSize }) => {
       let _fontSize = fontSize;
@@ -187,9 +187,9 @@ class ReactMemeGenerator extends PureComponent {
     });
     return false;
   };
-  //图片鼠标滚轮缩放
+  
   bindImageMouseWheel = e => {
-    const y = e.deltaY ? e.deltaY : e.wheelDeltaY; //火狐有特殊
+    const y = e.deltaY ? e.deltaY : e.wheelDeltaY;
     const [min, max] = whellScaleRange;
     this.setState(({ scale }) => {
       let _scale = scale;
@@ -219,7 +219,7 @@ class ReactMemeGenerator extends PureComponent {
           audio: true
         })
         .then(stream => {
-          const hide = message.loading('盛世美颜即将出现...')
+          const hide = message.loading('Camera image is about to appear...')
           this.setState(
             {
               cameraVisible: true
@@ -232,7 +232,7 @@ class ReactMemeGenerator extends PureComponent {
                 } catch (err) {
                   console.log(err);
                   Modal.error({
-                    title: "摄像头失败",
+                    title: "Camera failed",
                     content: err.message
                   });
                 } finally{
@@ -246,13 +246,13 @@ class ReactMemeGenerator extends PureComponent {
         .catch(err => {
           console.log(err)
           Modal.error({
-            title: "调用摄像头失败",
+            title: "Calling the camera failed",
             content: err.toString()
           });
           this.setState({ cameraVisible: false });
         });
     } else {
-      Modal.error({ title: "抱歉,你的电脑暂不支持摄像头!" });
+      Modal.error({ title: "Sorry, your computer does not support the camera at this time!" });
       this.setState({ cameraVisible: false });
     }
     // this.setState({ cameraVisible: true })
@@ -271,7 +271,7 @@ class ReactMemeGenerator extends PureComponent {
     canvas.height = height;
     ctx.drawImage(this.video, 0, 0, width, height);
     const data = canvas.toDataURL("image/png");
-    message.success('截取摄像头画面成功！')
+    message.success('Capture the camera screen successfully!')
     this.setState({
       currentImg: {
         src: data
@@ -293,7 +293,7 @@ class ReactMemeGenerator extends PureComponent {
     if (file && Object.is(typeof file, "object")) {
       let { type, name, size } = file;
       if (!isImage(type)) {
-        return message.error("无效的图片格式");
+        return message.error("Invalid image format");
       }
       this.setState({ loading: true });
       const url = window.URL.createObjectURL(file);
@@ -313,7 +313,7 @@ class ReactMemeGenerator extends PureComponent {
     target.stopPropagation();
     target.preventDefault();
   };
-  //绑定拖拽事件
+
   bindDragListener = (dragArea, dragAreaClass = true) => {
     document.addEventListener(
       "dragenter",
@@ -329,7 +329,7 @@ class ReactMemeGenerator extends PureComponent {
       },
       false
     );
-    //进入
+
     dragArea.addEventListener(
       "dragenter",
       e => {
@@ -338,7 +338,7 @@ class ReactMemeGenerator extends PureComponent {
       },
       false
     );
-    //离开
+
     dragArea.addEventListener(
       "dragleave",
       e => {
@@ -347,7 +347,7 @@ class ReactMemeGenerator extends PureComponent {
       },
       false
     );
-    //移动
+
     dragArea.addEventListener(
       "dragover",
       e => {
@@ -406,10 +406,10 @@ class ReactMemeGenerator extends PureComponent {
     const { items, types } = e.clipboardData;
     if (!items) return;
 
-    const item = items[0]; //只要一张图片
-    const { kind, type } = item; //kind 种类 ,type 类型
+    const item = items[0];
+    const { kind, type } = item;
     if (kind.toLocaleLowerCase() != "file") {
-      return message.error("错误的文件类型!");
+      return message.error("Wrong file type!");
     }
     const file = item.getAsFile();
     this.renderImage(file);
@@ -423,17 +423,17 @@ class ReactMemeGenerator extends PureComponent {
   };
   howToUse = () => {
     Modal.info({
-      title: "使用说明",
+      title: "Instructions for use",
       content: (
         <ul>
-          <li>支持图片拖拽和粘贴</li>
-          <li>选择图片后可使用鼠标滚轮缩放</li>
-          <li>每行文字可单独拖拽</li>
+          <li>Supports image drag and drop</li>
+          <li>Use the mouse wheel to zoom after selecting an image</li>
+          <li>Each line of text can be dragged separately</li>
         </ul>
       )
     });
   };
-  //翻转图片
+
   turnImage = value => {
     this.setState(({ isRotateX }) => ({
       [isRotateX ? "rotateX" : "rotateY"]: value
@@ -551,7 +551,7 @@ class ReactMemeGenerator extends PureComponent {
                 placement="top"
                 title={[
                   <span className="tip-text" key="tip-text">
-                    缩放比例: {_scale}
+                  Scaling Ratio: {_scale}
                   </span>,
                   <Button
                     key="resize-btn"
@@ -559,7 +559,7 @@ class ReactMemeGenerator extends PureComponent {
                     size="small"
                     onClick={this.resizeImageScale}
                   >
-                    还原
+                  reduction
                   </Button>
                 ]}
                 visible={imageWhellTipVisible}
@@ -672,7 +672,7 @@ class ReactMemeGenerator extends PureComponent {
                   <TextArea
                     autosize={true}
                     value={text}
-                    placeholder="请输入文字"
+                    placeholder="enter test"
                     onChange={this.onTextChange}
                     style={{ marginBottom: 10 }}
                     key="text-area"
