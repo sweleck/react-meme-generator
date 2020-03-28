@@ -8,12 +8,12 @@ import "../src/styles/index.less"
 import "./sp-basel.less"
 
 
-const Demo = () => (
+const SP_BASEL = () => (
     <LocaleProvider locale={de_DE}>
         <ReactMemeGenerator />
     </LocaleProvider>
 )
 ReactDOM.render(
-    <Demo/>,
+    <SP_BASEL/>,
     document.getElementById('root')
 )
