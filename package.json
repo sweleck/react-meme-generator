@@ -7,7 +7,7 @@
     "test": "jest",
     "clean": "rimraf lib && rimraf assets",
     "build": "webpack --env.mode=PROD --progress --config  ./sp/webpack.config.js",
-    "pc": "electron ./index.html",
+    "electron": "electron ./index.html",
     "build:pc": "electron-packager ./main.js memeGenerator --darwin --out memeGenerator --arch=x64 --overwrite --ignore=node_modules .history src assetsImg assets lib --electron-version=2.0.0",
     "@babel": "babel-upgrade --write"
   },
