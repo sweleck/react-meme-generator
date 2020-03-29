@@ -1,29 +1,26 @@
-# react-meme-generator
-:joy: a meme generator for react, support camera !
-
-Have Fun :)
-
-## Screenshots
+# react-statement-generator
+Create statements with your own image merge with a banner.
 ![example](https://github.com/lijinke666/react-meme-generator/blob/master/assetsImg/example.gif)
 
 ## Example
-[https://lijinke666.github.io/react-meme-generator/](https://lijinke666.github.io/react-meme-generator/)
+[https://sp.marcelcolomb.ch](https:/sp.marcelcolomb.ch/)
 
 ## Feature List
 
-- [x] Batch date
 - [x] Picture size control
 - [x] Support drag and paste selection images
-- [x] Pricture compress
-- [x] Pricture rotate
-- [x] Camera capture
+
 
 ## Development
 ```
 git clone https://github.com/lijinke666/react-meme-generator.git
 npm install | yarn
-npm start
+npm electron
 ```
 
 ## License
-[MIT](https://github.com/lijinke666/react-meme-generator/blob/master/LICENCE)
+[MIT](https://github.com/sweleck/react-statement-generator/blob/master/LICENCE)
+
+## Credits
+Project origin:
+[https://github.com/lijinke666/react-meme-generator](https://github.com/lijinke666/react-meme-generator)
