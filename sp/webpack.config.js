@@ -74,7 +74,6 @@ module.exports = env => {
       ]
     },
     devtool: "source-map",
-    //自动补全后缀
     resolve: {
       enforceExtension: false,
       extensions: [".js", ".jsx", ".json"],

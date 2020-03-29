@@ -99,22 +99,15 @@ class ReactMemeGenerator extends PureComponent {
   imageHeightChange = e => {
     this.setState({ height: e.target.value });
   };
-  toggleColorPicker = () => {
-    this.setState({ displayColorPicker: !this.state.displayColorPicker });
-  };
-  closeColorPicker = () => {
-    this.setState({ displayColorPicker: false });
-  };
-  colorChange = ({ hex }) => {
-    this.setState({ fontColor: hex });
-  };
+
   drawMeme = () => {
     const { width, height, loadingImgReady,isCompress } = this.state;
     if (!loadingImgReady) return message.error("Bild Hochladen");
 
     this.setState({ drawLoading: true });
 
-    const imageArea = document.querySelector(".preview-content");
+    var imageArea = document.querySelector(".preview-content");
+    imageArea.classList.toggle('zoom');
     const options = {
       width,
       height,
@@ -130,12 +123,14 @@ class ReactMemeGenerator extends PureComponent {
           title: "Erfolgreich generiert",
           content: <img src={dataUrl} style={{ maxWidth: "100%" }} />,
           onOk: () => {
-            message.success("下载成功!");
-            const filename = Date.now()
+            message.success("Erfolgreich!");
+            const filename = Date.now() + '_sp-statement'
             const ext = isCompress ? 'jpeg' : 'png'
             var link = document.createElement("a");
             link.download = `${filename}.${ext}`;
             link.href = dataUrl;
+            var imageArea = document.querySelector(".preview-content");
+            imageArea.classList.toggle('zoom');
             link.click();
           },
           okText: "Herunterladen",
@@ -211,75 +206,8 @@ class ReactMemeGenerator extends PureComponent {
     });
     return false;
   };
-  openCamera = () => {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices
-        .getUserMedia({
-          video: true,
-          audio: true
-        })
-        .then(stream => {
-          const hide = message.loading('Bild wird generiert...')
-          this.setState(
-            {
-              cameraVisible: true
-            },
-            () => {
-              setTimeout(()=>{
-                try {
-                  this.video.srcObject = stream
-                  this.video.play();
-                } catch (err) {
-                  console.log(err);
-                  Modal.error({
-                    title: "Kamera ausgefallen",
-                    content: err.message
-                  });
-                } finally{
-                  hide()
-                }
-              },1000)
-              
-            }
-          );
-        })
-        .catch(err => {
-          console.log(err)
-          Modal.error({
-            title: "Kamera konnte nicht initialisiert werden",
-            content: err.toString()
-          });
-          this.setState({ cameraVisible: false });
-        });
-    } else {
-      Modal.error({ title: "Ihr Computer unterstützt die Kamera derzeit nicht!" });
-      this.setState({ cameraVisible: false });
-    }
-  };
-  closeCamera = () => {
-    this.setState({ cameraVisible: false, cameraUrl:"" });
-  };
   fontSizeChange = value => {
     this.setState({ fontSize: value });
-  };
-  screenShotCamera = () => {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const { width, height } = previewContentStyle;
-    canvas.width = width;
-    canvas.height = height;
-    ctx.drawImage(this.video, 0, 0, width, height);
-    const data = canvas.toDataURL("image/png");
-    message.success('Bild erfolgreich erfasst！')
-    this.setState({
-      currentImg: {
-        src: data
-      },
-      cameraVisible:false,
-      scale: defaultScale,
-      loading: false,
-      loadingImgReady: true
-    });
   };
   onSelectFile = () => {
     this.file.click();
@@ -521,7 +449,7 @@ class ReactMemeGenerator extends PureComponent {
           onMouseLeave: this.closeImageWhellTip
         }
       : {};
-    
+
     const previewImageSize = {
       width:`${width}px`,
       height:`${height}px`
@@ -529,17 +457,13 @@ class ReactMemeGenerator extends PureComponent {
 
     return (
       <Container className={prefix}>
-        <Divider>
-          <h2 className="title">
-            <a href={repository.url}>{APPNAME}</a>
-          </h2>
-        </Divider>
         <section
           className={`${prefix}-main`}
           ref={previewArea => (this.previewArea = previewArea)}
         >
-          <Row>
-            <Col span="8">
+
+          <Row type="flex" align="middle" className="preview-container" style={{alignItems: 'center'}}>
+            <Col>
               <Tooltip
                 placement="top"
                 title={[
@@ -559,7 +483,7 @@ class ReactMemeGenerator extends PureComponent {
               >
                 <div
                   ref={node => (this.previewContent = node)}
-                  className={cls("preview-content", {
+                  className={cls("preview-content zoom", {
                     [this.activeDragAreaClass]: dragAreaClass
                   })}
                   {...previewImageEvents}
@@ -594,7 +518,7 @@ class ReactMemeGenerator extends PureComponent {
                           bounds="parent"
                           onStop={this.stopDragText}
                           key={i}
-                          defaultPosition={{ x: 0, y: fontSize * i }}
+                          defaultPosition={{ x: 91, y: 132 }}
                         >
                           <div
                             key={i}
@@ -624,6 +548,7 @@ class ReactMemeGenerator extends PureComponent {
                       </pre>
                     </Draggable>
                   )}
+                  <div className="preview-background"></div>
                 </div>
               </Tooltip>
 
@@ -635,7 +560,7 @@ class ReactMemeGenerator extends PureComponent {
                   ref={node => (this.file = node)}
                   onChange={this.imageChange}
                 />
-                <Col span={6}>
+                <Col span={24}>
                   <Button
                     icon="folder-add"
                     type="dashed"
@@ -643,117 +568,27 @@ class ReactMemeGenerator extends PureComponent {
                     loading={loading}
                     onClick={this.onSelectFile}
                   >
-                    {loading ? "Bitte später" : "Bitte wählen Sie ein Bild aus"}
-                  </Button>
-                </Col>
-                <Col span={6} offset={3}>
-                  <Button
-                    icon="video-camera"
-                    type="dashed"
-                    size="large"
-                    onClick={this.openCamera}
-                  >
-                    使用摄像头
+                    {loading ? "Bild wird geladen" : "Wähle ein Bild"}
                   </Button>
                 </Col>
               </Row>
             </Col>
-            <Col span="16">
+          </Row>
+          <Row type="flex">
+            <Col>
               {operationRow({
                 label: "Text",
                 component: [
                   <TextArea
-                    autosize={true}
+                    rows={4}
                     value={text}
                     placeholder="Bitte geben Sie ihr Statement ein"
                     onChange={this.onTextChange}
                     style={{ marginBottom: 10 }}
                     key="text-area"
+                    className="preview-image"
                   />,
-                  <Checkbox
-                    key="check-box"
-                    value={toggleText}
-                    onChange={this.toggleText}
-                  >
-                    Jede Zeile kann eigenständig plaziert werden
-                  </Checkbox>
                 ]
-              })}
-              {operationRow({
-                icon: "file-ppt",
-                label: "Schriftart",
-                component: (
-                  <Select
-                    style={{ width: "100%" }}
-                    defaultValue={defaultFont}
-                    onChange={this.fontFamilyChange}
-                  >
-                    {fontFamily.map(({ label, value }, i) => (
-                      <Option value={value} key={i}>
-                        {label}
-                      </Option>
-                    ))}
-                  </Select>
-                )
-              })}
-              {operationRow({
-                icon: "pie-chart",
-                label: "Textfarbe",
-                component: (
-                  <div>
-                    <div
-                      className="color-section"
-                      onClick={this.toggleColorPicker}
-                    >
-                      <div
-                        className="color"
-                        style={{
-                          background: fontColor
-                        }}
-                      />
-                    </div>
-                    {displayColorPicker ? (
-                      <div className="popover">
-                        <div
-                          className="cover"
-                          onClick={this.closeColorPicker}
-                        />
-                        <SketchPicker
-                          color={fontColor}
-                          onChange={this.colorChange}
-                        />
-                      </div>
-                    ) : (
-                      undefined
-                    )}
-                  </div>
-                )
-              })}
-              {operationRow({
-                icon: "line-chart",
-                label: "Bildgröße",
-                component: (
-                  <Row>
-                    <Col span={11}>
-                      <Input
-                        placeholder="Breite"
-                        defaultValue={previewContentStyle.width}
-                        addonAfter="px"
-                        addonBefore="Breite"
-                        onChange={this.imageWidthChange}
-                      />
-                    </Col>
-                    <Col span={11} offset={2}>
-                      <Input
-                        placeholder="Höhe"
-                        defaultValue={previewContentStyle.height}
-                        addonAfter="px"
-                        addonBefore="Höhe"
-                        onChange={this.imageHeightChange}
-                      />
-                    </Col>
-                  </Row>
-                )
               })}
               {operationRow({
                 icon: "file-word",
@@ -775,71 +610,7 @@ class ReactMemeGenerator extends PureComponent {
                   />
                 )
               })}
-              {operationRow({
-                icon: "picture",
-                label: "Bildrotation",
-                component: (
-                  <Slider
-                    min={0}
-                    max={360}
-                    defaultValue={0}
-                    tipFormatter={value =>
-                      loadingImgReady ? `${value}°` : "Bitte wählen Sie ein Bild aus"
-                    }
-                    onChange={this.rotateImage}
-                    disabled={!loadingImgReady}
-                    marks={{
-                      0: "0°",
-                      90: "90°",
-                      180: "180°",
-                      360: "360°"
-                    }}
-                  />
-                )
-              })}
-              {operationRow({
-                icon: "share-alt",
-                label: "Bild Flipen",
-                component: (
-                  <Row>
-                    <Col span={15}>
-                      <Slider
-                        min={0}
-                        max={360}
-                        step={0.01}
-                        defaultValue={0}
-                        tipFormatter={value =>
-                          loadingImgReady ? `${value}°` : "Bitte wählen Sie ein Bild aus"
-                        }
-                        onChange={this.turnImage}
-                        disabled={!loadingImgReady}
-                        marks={{
-                          0: "0°",
-                          90: "90°",
-                          180: "180°",
-                          360: "360°"
-                        }}
-                      />
-                    </Col>
-                    <Col span={5} offset={4}>
-                      <RadioGroup
-                        onChange={this.turnRotateChange}
-                        value={this.state.isRotateX}
-                      >
-                        <Radio value={true}>X-Achsen-Flip</Radio>
-                        <Radio value={false}>Y-Achsen-Flip</Radio>
-                      </RadioGroup>
-                    </Col>
-                  </Row>
-                )
-              })}
-              {operationRow({
-                icon: "skin",
-                label: "Bildkomprimierung",
-                component: (
-                    <Checkbox onChange={this.onCompress}>Komprimiert</Checkbox>
-                )
-              })}
+
               <Row>
                 <Col span={24}>
                   <Button
@@ -852,43 +623,13 @@ class ReactMemeGenerator extends PureComponent {
                       width:"100%"
                     }}
                   >
-                    {drawLoading ? "Warte einen Moment..." : "Emoticons generieren"}
+                    {drawLoading ? "Bitte kurz warten..." : "Statement generieren"}
                   </Button>
                 </Col>
               </Row>
             </Col>
           </Row>
         </section>
-        <Divider>
-          <a href={repository.url} target="_blank">
-            GitHub
-          </a>{" "}
-          (version:{APPVERSION}){" "}
-          <a href="#" onClick={this.howToUse}>
-            使用说明
-          </a>
-        </Divider>
-
-        <Modal
-          maskClosable={false}
-          visible={cameraVisible}
-          title="HIER BRAUCHT ES WAS RICHTIGES"
-          okText="Mach ein Foto"
-          cancelText="Nochmal"
-          onCancel={this.closeCamera}
-          onOk={this.screenShotCamera}
-        >
-          <video
-            style={{
-              display:"block",
-              margin:"0 auto"
-            }}
-            ref={video => (this.video = video)}
-            src={cameraUrl}
-            width={previewContentStyle.width}
-            height={previewContentStyle.height}
-          />
-        </Modal>
 
         <Modal
           maskClosable={false}
@@ -907,7 +648,6 @@ class ReactMemeGenerator extends PureComponent {
   componentWillUnmount() {
     const { drag, paste } = this.props;
     paste && this.unBindPasteListener(document.body);
-    this.video = null;
   }
   componentDidMount() {
     const { drag, paste } = this.props;

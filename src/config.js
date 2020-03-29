@@ -44,13 +44,15 @@ export const imageProcess = [
     }
 ]
 
-export const fontSize = Array.from({ length: 100 }).map((_, i) => i + 1).filter(v => v >= 12)
+export const fontSize = Array.from({ length: 100 }).map((_, i) => i + 1).filter(v => v >= 60)
 
 export const defaultFontSize = fontSize[4]
 
-export const defaultFontColor = "#444"
+export const defaultFontColor = "#ffffff"
 
-export const defaultFontText = "Dein Zitat"
+export const defaultFontText = "Dein Statement"
+
+export const defaultFontName = "Dein Name"
 
 export const img_max_size = 1024
 
@@ -69,6 +71,6 @@ export const defaultRotate = 0
 export const defaultQuality = 0.50
 
 export const previewContentStyle = {
-    width: 300,
-    height: 300
+    width: 1080,
+    height: 1080
 }
