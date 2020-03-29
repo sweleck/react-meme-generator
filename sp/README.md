@@ -1,6 +1,6 @@
 # react-meme-generator
-run example
+build example
 
 ```
-$ npm run demo :)
+$ npm run build
 ```

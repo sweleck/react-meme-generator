@@ -5,7 +5,7 @@ import {LocaleProvider} from "antd"
 import zhCN from 'antd/lib/locale-provider/zh_CN'
 
 import "../src/styles/index.less"
-import "./example.less"
+import "./sp.less"
 
 
 const Demo = () => (

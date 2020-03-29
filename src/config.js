@@ -2,83 +2,83 @@ export const prefix = "react-meme"
 
 export const fontFamily = [
     {
-        label: "Microsoft YaHei",
+        label: "微软雅黑",
         value: "Microsoft YaHei"
     },
     {
-        label: "Helvetica",
+        label: "海维提卡",
         value: "Helvetica"
     }, {
-        label: "Cursive",
+        label: "草书",
         value: "cursive"
     }, {
-        label: "SimSub",
+        label: "宋体",
         value: "SimSub"
     }, {
-        label: "SimHe",
+        label: "黑体",
         value: "SimHei"
     }, {
-        label: "KaiTi",
+        label: "楷体",
         value: "KaiTi"
     }, {
-        label: "STKaiti",
+        label: "华文黑体",
         value: "STKaiti"
     }, {
-        label: "LiSu",
+        label: "隶书",
         value: "LiSu"
     }, {
-        label: "YouYuan",
+        label: "幼圆",
         value: "YouYuan"
     }
 ]
 
-// TODO
+//图片处理类型 TODO
 export const imageProcess = [
     {
-        label: "default",
+        label: "系统默认",
         value: "default"
     },
     {
-        label: "reversal",
+        label: "翻转",
         value: "reversal"
     },
     {
-        label: "compress",
+        label: "压缩",
         value: "compress"
     }
 ]
 
 export const fontSize = Array.from({ length: 100 }).map((_, i) => i + 1).filter(v => v >= 12)
 
-// 20 px
+//默认 20 px
 export const defaultFontSize = fontSize[4]
 
 export const defaultFontColor = "#444"
 
-export const defaultFontText = "Microsoft YaHei"
+export const defaultFontText = "示例文字"
 
-
+//图片最大限制
 export const img_max_size = 1024
 
-
+//图片每次缩放的值
 export const range = 0.05    
 
-
+//文字每次缩放的值
 export const textRange = 1        
 
 export const whellScaleRange = [0.4, 3.0]
 
-
+//文本缩放 最大最小值限制
 export const textWhellScaleRange = [fontSize[0],fontSize[fontSize.length-1]]
 
-
+//图片默认缩放比例
 export const defaultScale = 1.0
 export const defaultRotate = 0
 
 export const defaultQuality = 0.50
 
-
+//图片预览区域宽高
 export const previewContentStyle = {
-    width: 500,
-    height: 500
+    width: 300,
+    height: 300
 }

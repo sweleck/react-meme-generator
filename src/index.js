@@ -64,21 +64,21 @@ class ReactMemeGenerator extends PureComponent {
     text: defaultFontText,
     font: fontFamily[0].value,
     loadingImgReady: false,
-    dragAreaClass: false,
+    dragAreaClass: false, //拖拽区域active class
     textDragX: 0,
     textDragY: 0,
     imageDragX: 0,
     imageDragY: 0,
     isRotateText: false,
-    rotate: defaultRotate,
-    scale: defaultScale,
-    toggleText: false,
+    rotate: defaultRotate, //旋转角度
+    scale: defaultScale, //缩放比例
+    toggleText: false, //为false  文字换行时属于整体 反之为独立的一行 不受其他控制
     width: previewContentStyle.width,
     height: previewContentStyle.height,
     drawLoading: false,
-    rotateX: 0,
+    rotateX: 0, //翻转
     rotateY: 0,
-    isRotateX: false,
+    isRotateX: false, //x轴翻转
     isCompress:false
   };
   activeDragAreaClass = "drag-active";
@@ -110,7 +110,7 @@ class ReactMemeGenerator extends PureComponent {
   };
   drawMeme = () => {
     const { width, height, loadingImgReady,isCompress } = this.state;
-    if (!loadingImgReady) return message.error("Select an image!");
+    if (!loadingImgReady) return message.error("请选择图片!");
 
     this.setState({ drawLoading: true });
 
@@ -127,10 +127,10 @@ class ReactMemeGenerator extends PureComponent {
       .then(dataUrl => {
         this.setState({ drawLoading: false });
         Modal.confirm({
-          title: "Success",
+          title: "生成成功",
           content: <img src={dataUrl} style={{ maxWidth: "100%" }} />,
           onOk: () => {
-            message.success("Download successful!");
+            message.success("下载成功!");
             const filename = Date.now()
             const ext = isCompress ? 'jpeg' : 'png'
             var link = document.createElement("a");
@@ -138,8 +138,8 @@ class ReactMemeGenerator extends PureComponent {
             link.href = dataUrl;
             link.click();
           },
-          okText: "Download",
-          cancelText: "Re-start"
+          okText: "立即下载",
+          cancelText: "再改一改"
         });
       })
       .catch(err => {
@@ -164,10 +164,10 @@ class ReactMemeGenerator extends PureComponent {
       this.setState({ scale: defaultRotate });
     }
   };
-
+  //文字鼠标滚轮缩放
   bindTextWheel = e => {
     e.stopPropagation();
-    const y = e.deltaY ? e.deltaY : e.wheelDeltaY;
+    const y = e.deltaY ? e.deltaY : e.wheelDeltaY; //火狐有特殊
     const [min, max] = textWhellScaleRange;
     this.setState(({ fontSize }) => {
       let _fontSize = fontSize;
@@ -187,9 +187,9 @@ class ReactMemeGenerator extends PureComponent {
     });
     return false;
   };
-  
+  //图片鼠标滚轮缩放
   bindImageMouseWheel = e => {
-    const y = e.deltaY ? e.deltaY : e.wheelDeltaY;
+    const y = e.deltaY ? e.deltaY : e.wheelDeltaY; //火狐有特殊
     const [min, max] = whellScaleRange;
     this.setState(({ scale }) => {
       let _scale = scale;
@@ -219,7 +219,7 @@ class ReactMemeGenerator extends PureComponent {
           audio: true
         })
         .then(stream => {
-          const hide = message.loading('Camera image is about to appear...')
+          const hide = message.loading('盛世美颜即将出现...')
           this.setState(
             {
               cameraVisible: true
@@ -232,7 +232,7 @@ class ReactMemeGenerator extends PureComponent {
                 } catch (err) {
                   console.log(err);
                   Modal.error({
-                    title: "Camera failed",
+                    title: "摄像头失败",
                     content: err.message
                   });
                 } finally{
@@ -246,13 +246,13 @@ class ReactMemeGenerator extends PureComponent {
         .catch(err => {
           console.log(err)
           Modal.error({
-            title: "Calling the camera failed",
+            title: "调用摄像头失败",
             content: err.toString()
           });
           this.setState({ cameraVisible: false });
         });
     } else {
-      Modal.error({ title: "Sorry, your computer does not support the camera at this time!" });
+      Modal.error({ title: "抱歉,你的电脑暂不支持摄像头!" });
       this.setState({ cameraVisible: false });
     }
     // this.setState({ cameraVisible: true })
@@ -271,7 +271,7 @@ class ReactMemeGenerator extends PureComponent {
     canvas.height = height;
     ctx.drawImage(this.video, 0, 0, width, height);
     const data = canvas.toDataURL("image/png");
-    message.success('Capture the camera screen successfully!')
+    message.success('截取摄像头画面成功！')
     this.setState({
       currentImg: {
         src: data
@@ -293,7 +293,7 @@ class ReactMemeGenerator extends PureComponent {
     if (file && Object.is(typeof file, "object")) {
       let { type, name, size } = file;
       if (!isImage(type)) {
-        return message.error("Invalid image format");
+        return message.error("无效的图片格式");
       }
       this.setState({ loading: true });
       const url = window.URL.createObjectURL(file);
@@ -313,7 +313,7 @@ class ReactMemeGenerator extends PureComponent {
     target.stopPropagation();
     target.preventDefault();
   };
-
+  //绑定拖拽事件
   bindDragListener = (dragArea, dragAreaClass = true) => {
     document.addEventListener(
       "dragenter",
@@ -329,7 +329,7 @@ class ReactMemeGenerator extends PureComponent {
       },
       false
     );
-
+    //进入
     dragArea.addEventListener(
       "dragenter",
       e => {
@@ -338,7 +338,7 @@ class ReactMemeGenerator extends PureComponent {
       },
       false
     );
-
+    //离开
     dragArea.addEventListener(
       "dragleave",
       e => {
@@ -347,7 +347,7 @@ class ReactMemeGenerator extends PureComponent {
       },
       false
     );
-
+    //移动
     dragArea.addEventListener(
       "dragover",
       e => {
@@ -406,10 +406,10 @@ class ReactMemeGenerator extends PureComponent {
     const { items, types } = e.clipboardData;
     if (!items) return;
 
-    const item = items[0];
-    const { kind, type } = item;
+    const item = items[0]; //只要一张图片
+    const { kind, type } = item; //kind 种类 ,type 类型
     if (kind.toLocaleLowerCase() != "file") {
-      return message.error("Wrong file type!");
+      return message.error("错误的文件类型!");
     }
     const file = item.getAsFile();
     this.renderImage(file);
@@ -423,17 +423,17 @@ class ReactMemeGenerator extends PureComponent {
   };
   howToUse = () => {
     Modal.info({
-      title: "Instructions for use",
+      title: "使用说明",
       content: (
         <ul>
-          <li>Supports image drag and drop</li>
-          <li>Use the mouse wheel to zoom after selecting an image</li>
-          <li>Each line of text can be dragged separately</li>
+          <li>支持图片拖拽和粘贴</li>
+          <li>选择图片后可使用鼠标滚轮缩放</li>
+          <li>每行文字可单独拖拽</li>
         </ul>
       )
     });
   };
-
+  //翻转图片
   turnImage = value => {
     this.setState(({ isRotateX }) => ({
       [isRotateX ? "rotateX" : "rotateY"]: value
@@ -551,7 +551,7 @@ class ReactMemeGenerator extends PureComponent {
                 placement="top"
                 title={[
                   <span className="tip-text" key="tip-text">
-                  Scaling Ratio: {_scale}
+                    缩放比例: {_scale}
                   </span>,
                   <Button
                     key="resize-btn"
@@ -559,7 +559,7 @@ class ReactMemeGenerator extends PureComponent {
                     size="small"
                     onClick={this.resizeImageScale}
                   >
-                  reduction
+                    还原
                   </Button>
                 ]}
                 visible={imageWhellTipVisible}
@@ -650,7 +650,7 @@ class ReactMemeGenerator extends PureComponent {
                     loading={loading}
                     onClick={this.onSelectFile}
                   >
-                    {loading ? "Please wait.." : "Select image"}
+                    {loading ? "请稍后" : "选择图片"}
                   </Button>
                 </Col>
                 <Col span={6} offset={3}>
@@ -660,19 +660,19 @@ class ReactMemeGenerator extends PureComponent {
                     size="large"
                     onClick={this.openCamera}
                   >
-                    Camera
+                    使用摄像头
                   </Button>
                 </Col>
               </Row>
             </Col>
             <Col span="16">
               {operationRow({
-                label: "Text",
+                label: "文字",
                 component: [
                   <TextArea
                     autosize={true}
                     value={text}
-                    placeholder="enter test"
+                    placeholder="请输入文字"
                     onChange={this.onTextChange}
                     style={{ marginBottom: 10 }}
                     key="text-area"
@@ -682,13 +682,13 @@ class ReactMemeGenerator extends PureComponent {
                     value={toggleText}
                     onChange={this.toggleText}
                   >
-                   Independent control of each line of text
+                    每行文字独立控制
                   </Checkbox>
                 ]
               })}
               {operationRow({
                 icon: "file-ppt",
-                label: "Font",
+                label: "字体",
                 component: (
                   <Select
                     style={{ width: "100%" }}
@@ -705,7 +705,7 @@ class ReactMemeGenerator extends PureComponent {
               })}
               {operationRow({
                 icon: "pie-chart",
-                label: "Text Color",
+                label: "文字颜色",
                 component: (
                   <div>
                     <div
@@ -738,24 +738,24 @@ class ReactMemeGenerator extends PureComponent {
               })}
               {operationRow({
                 icon: "line-chart",
-                label: "Image Size",
+                label: "图片大小",
                 component: (
                   <Row>
                     <Col span={11}>
                       <Input
-                        placeholder="Width"
+                        placeholder="宽"
                         defaultValue={previewContentStyle.width}
                         addonAfter="px"
-                        addonBefore="Width"
+                        addonBefore="宽"
                         onChange={this.imageWidthChange}
                       />
                     </Col>
                     <Col span={11} offset={2}>
                       <Input
-                        placeholder="Height"
+                        placeholder="高"
                         defaultValue={previewContentStyle.height}
                         addonAfter="px"
-                        addonBefore="Height"
+                        addonBefore="高"
                         onChange={this.imageHeightChange}
                       />
                     </Col>
@@ -764,7 +764,7 @@ class ReactMemeGenerator extends PureComponent {
               })}
               {operationRow({
                 icon: "file-word",
-                label: "Font Size",
+                label: "文字大小",
                 component: (
                   <Slider
                     min={FONT_SIZE[0]}
@@ -784,29 +784,29 @@ class ReactMemeGenerator extends PureComponent {
               })}
               {operationRow({
                 icon: "picture",
-                label: "Image Rotation",
+                label: "图像旋转",
                 component: (
                   <Slider
                     min={0}
                     max={360}
                     defaultValue={0}
                     tipFormatter={value =>
-                      loadingImgReady ? `${value}°` : "Please select an image"
+                      loadingImgReady ? `${value}°` : "请选择图片"
                     }
                     onChange={this.rotateImage}
                     disabled={!loadingImgReady}
                     marks={{
-                      0: "0°(no rotation)",
+                      0: "0°(无旋转)",
                       90: "90°",
                       180: "180°",
-                      360: "360°(no rotation)"
+                      360: "360°(无旋转)"
                     }}
                   />
                 )
               })}
               {operationRow({
                 icon: "share-alt",
-                label: "Image Flip",
+                label: "图像翻转",
                 component: (
                   <Row>
                     <Col span={15}>
@@ -816,15 +816,15 @@ class ReactMemeGenerator extends PureComponent {
                         step={0.01}
                         defaultValue={0}
                         tipFormatter={value =>
-                          loadingImgReady ? `${value}°` : "Please select an image"
+                          loadingImgReady ? `${value}°` : "请选择图片"
                         }
                         onChange={this.turnImage}
                         disabled={!loadingImgReady}
                         marks={{
-                          0: "0°(no flip)",
+                          0: "0°(无翻转)",
                           90: "90°",
                           180: "180°",
-                          360: "360°(no flip)"
+                          360: "360°(无翻转)"
                         }}
                       />
                     </Col>
@@ -833,8 +833,8 @@ class ReactMemeGenerator extends PureComponent {
                         onChange={this.turnRotateChange}
                         value={this.state.isRotateX}
                       >
-                        <Radio value={true}>X-axis flip</Radio>
-                        <Radio value={false}>Y-axis flip</Radio>
+                        <Radio value={true}>X轴翻转</Radio>
+                        <Radio value={false}>Y轴翻转</Radio>
                       </RadioGroup>
                     </Col>
                   </Row>
@@ -842,9 +842,9 @@ class ReactMemeGenerator extends PureComponent {
               })}
               {operationRow({
                 icon: "skin",
-                label: "Image Compression",
+                label: "图片压缩",
                 component: (
-                    <Checkbox onChange={this.onCompress}>Compression</Checkbox>
+                    <Checkbox onChange={this.onCompress}>压缩</Checkbox>
                 )
               })}
               <Row>
@@ -859,20 +859,29 @@ class ReactMemeGenerator extends PureComponent {
                       width:"100%"
                     }}
                   >
-                    {drawLoading ? "Wait a moment..." : "Generate"}
+                    {drawLoading ? "稍等片刻..." : "生成表情包"}
                   </Button>
                 </Col>
               </Row>
             </Col>
           </Row>
         </section>
+        <Divider>
+          <a href={repository.url} target="_blank">
+            GitHub
+          </a>{" "}
+          (version:{APPVERSION}){" "}
+          <a href="#" onClick={this.howToUse}>
+            使用说明
+          </a>
+        </Divider>
 
         <Modal
           maskClosable={false}
           visible={cameraVisible}
-          title="Camera Photo"
-          okText="Take a Photo"
-          cancelText="Cancel"
+          title="小伙子有点帅哦"
+          okText="拍照"
+          cancelText="算了太丑了"
           onCancel={this.closeCamera}
           onOk={this.screenShotCamera}
         >
@@ -891,9 +900,9 @@ class ReactMemeGenerator extends PureComponent {
         <Modal
           maskClosable={false}
           visible={memeModalVisible}
-          title="Generate"
-          okText="Confirm"
-          cancelText="Cancel"
+          title="表情包生成"
+          okText="确认生成"
+          cancelText="再调整一下"
           onCancel={this.closeMemeModal}
           onOk={this.createMeme}
         >

@@ -14,12 +14,12 @@ module.exports = env => {
             "react-hot-loader/patch", //热更新
             `webpack-dev-server/client?http://${HOST}:${PORT}`,
             "webpack/hot/only-dev-server",
-            path.join(__dirname, "../example/example.js")
+            path.join(__dirname, "../sp/sp.js")
           ]
-        : path.join(__dirname, "../example/example.js"),
+        : path.join(__dirname, "../sp/sp.js"),
 
     output: {
-      path: path.join(__dirname, "../example/dist"),
+      path: path.join(__dirname, "../sp/dist"),
       filename: "build.js"
     },
     //模块加载器
@@ -84,7 +84,7 @@ module.exports = env => {
       async: "commonjs async"
     },
     devServer: {
-      contentBase: path.join(__dirname, "../example/"),
+      contentBase: path.join(__dirname, "../sp/"),
       inline: true,
       port: PORT,
       publicPath: "/dist/",
