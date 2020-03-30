@@ -46,6 +46,8 @@ export const imageProcess = [
 
 export const fontSize = Array.from({ length: 150 }).map((_, i) => i + 1).filter(v => v >= 45)
 
+export const zoom = Array.from({ length: 20 }).map((_, i) => i + 0.1).filter(v => v >= 1.0)
+
 export const defaultFontSize = fontSize[19]
 
 export const defaultFontSizeName = 47

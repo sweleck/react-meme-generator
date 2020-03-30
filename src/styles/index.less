@@ -61,7 +61,7 @@
     z-index: 99;
     transform: translate3d(0, 0, 0);
     transition: .3s cubic-bezier(0.075, 0.82, 0.165, 1);
-    box-shadow: 26px 26px 30px 7px rgba(0,0,0,0.2);
+    box-shadow: 26px 26px 30px 7px rgba(0, 0, 0, 0.2);
 
     &:hover {
       box-shadow: @shadow;
@@ -93,7 +93,7 @@
       z-index: 0;
       position: absolute;
       top: 1px;
-      background: linear-gradient(69deg, rgba(228,2,45,1) 41%, rgba(228,2,45,0) 100%);
+      background: linear-gradient(69deg, rgba(228, 2, 45, 1) 41%, rgba(228, 2, 45, 0) 100%);
       pointer-events: none;
 
       img {
@@ -116,8 +116,25 @@
     padding: 0;
     text-align: left;
   }
+
+  .ant-slider-mark-text,
+  .ant-slider-mark-text-active {
+    color: #ffffff;
+  }
+
+  .input-text {
+    .react-meme-item-label {
+      display: none;
+    }
+  }
 }
 
 .react-meme-resize-btn {
   margin-left: 10px;
+}
+
+@media all and (max-width: 768px) {
+  .react-meme .preview-content.zoom {
+    zoom: 29%;
+  }
 }

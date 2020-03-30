@@ -43,7 +43,8 @@ import {
   defaultRotate,
   defaultQuality,
   defaultFontName,
-  logo
+  logo,
+  zoom
 } from "./config";
 
 import {isImage} from "./utils";
@@ -84,7 +85,8 @@ class ReactMemeGenerator extends PureComponent {
     rotateY: 0,
     isRotateX: false,
     isCompress: false,
-    logo: logo
+    logo: logo,
+    zoom: zoom
   };
   activeDragAreaClass = "drag-active";
 
@@ -578,7 +580,7 @@ class ReactMemeGenerator extends PureComponent {
               </Row>
             </Col>
           </Row>
-          <Row type="flex">
+          <Row type="flex" className="input-text">
             <Col span={24}>
               {operationRow({
                 label: "Text",
@@ -608,6 +610,7 @@ class ReactMemeGenerator extends PureComponent {
                   />,
                 ]
               })}
+
               {operationRow({
                 icon: "file-word",
                 label: "Textgrösse",
