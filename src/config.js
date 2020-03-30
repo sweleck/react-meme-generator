@@ -44,15 +44,17 @@ export const imageProcess = [
     }
 ]
 
-export const fontSize = Array.from({ length: 100 }).map((_, i) => i + 1).filter(v => v >= 60)
+export const fontSize = Array.from({ length: 150 }).map((_, i) => i + 1).filter(v => v >= 45)
 
-export const defaultFontSize = fontSize[4]
+export const defaultFontSize = fontSize[19]
+
+export const defaultFontSizeName = 47
 
 export const defaultFontColor = "#ffffff"
 
-export const defaultFontText = "Dein Statement"
+export const defaultFontText = "«Dein Statement»"
 
-export const defaultFontName = "Dein Name"
+export const defaultFontName = "«-Dein Name»"
 
 export const img_max_size = 1024
 
@@ -74,3 +76,5 @@ export const previewContentStyle = {
     width: 1080,
     height: 1080
 }
+
+export const logo = 'src/logo/sp_logo.gif'

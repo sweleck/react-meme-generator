@@ -2,7 +2,7 @@
  * @name react 表情包 制作器
  * @author jinke.li
  */
-import React, { PureComponent, Fragment } from "react";
+import React, {PureComponent, Fragment} from "react";
 import Container from "./components/Container";
 import cls from "classnames";
 import {
@@ -20,10 +20,10 @@ import {
   Tooltip,
   Radio
 } from "antd";
-import { SketchPicker } from "react-color";
+import {SketchPicker} from "react-color";
 import Draggable from "react-draggable";
 import domToImage from "dom-to-image";
-import { hot } from "react-hot-loader";
+import {hot} from "react-hot-loader";
 import {
   prefix,
   fontFamily,
@@ -31,6 +31,7 @@ import {
   defaultFontColor,
   imageProcess,
   defaultFontSize,
+  defaultFontSizeName,
   fontSize as FONT_SIZE,
   maxFileSize as IMG_MAX_SIZE,
   previewContentStyle,
@@ -40,19 +41,21 @@ import {
   textWhellScaleRange,
   defaultScale,
   defaultRotate,
-  defaultQuality
+  defaultQuality,
+  defaultFontName,
+  logo
 } from "./config";
 
-import { isImage } from "./utils";
+import {isImage} from "./utils";
 import {
   name as APPNAME,
   version as APPVERSION,
   repository
 } from "../package.json";
 
-const { FormItem } = Form;
-const { Option } = Select;
-const { TextArea } = Input;
+const {FormItem} = Form;
+const {Option} = Select;
+const {TextArea} = Input;
 const RadioGroup = Radio.Group;
 
 class ReactMemeGenerator extends PureComponent {
@@ -61,7 +64,9 @@ class ReactMemeGenerator extends PureComponent {
     displayColorPicker: false,
     fontColor: defaultFontColor,
     fontSize: defaultFontSize,
+    fontSizeName: defaultFontSizeName,
     text: defaultFontText,
+    name: defaultFontName,
     font: fontFamily[0].value,
     loadingImgReady: false,
     dragAreaClass: false,
@@ -72,39 +77,42 @@ class ReactMemeGenerator extends PureComponent {
     isRotateText: false,
     rotate: defaultRotate,
     scale: defaultScale,
-    toggleText: false,
     width: previewContentStyle.width,
     height: previewContentStyle.height,
     drawLoading: false,
     rotateX: 0,
     rotateY: 0,
     isRotateX: false,
-    isCompress:false
+    isCompress: false,
+    logo: logo
   };
   activeDragAreaClass = "drag-active";
+
   constructor(props) {
     super(props);
   }
+
   static defaultProps = {
     defaultFont: fontFamily[0].value,
     defaultImageProcess: imageProcess[0].value,
     defaultText: defaultFontText,
     defaultFontSize,
+    defaultFontSizeName,
     drag: true,
     paste: true
   };
   imageWidthChange = e => {
-    this.setState({ width: e.target.value });
+    this.setState({width: e.target.value});
   };
   imageHeightChange = e => {
-    this.setState({ height: e.target.value });
+    this.setState({height: e.target.value});
   };
 
   drawMeme = () => {
-    const { width, height, loadingImgReady,isCompress } = this.state;
+    const {width, height, loadingImgReady, isCompress} = this.state;
     if (!loadingImgReady) return message.error("Bild Hochladen");
 
-    this.setState({ drawLoading: true });
+    this.setState({drawLoading: true});
 
     var imageArea = document.querySelector(".preview-content");
     imageArea.classList.toggle('zoom');
@@ -112,16 +120,16 @@ class ReactMemeGenerator extends PureComponent {
       width,
       height,
     }
-    if(isCompress){
+    if (isCompress) {
       options.quality = defaultQuality
     }
     domToImage
       .toPng(imageArea, options)
       .then(dataUrl => {
-        this.setState({ drawLoading: false });
+        this.setState({drawLoading: false});
         Modal.confirm({
           title: "Erfolgreich generiert",
-          content: <img src={dataUrl} style={{ maxWidth: "100%" }} />,
+          content: <img src={dataUrl} style={{maxWidth: "100%"}}/>,
           onOk: () => {
             message.success("Erfolgreich!");
             const filename = Date.now() + '_sp-statement'
@@ -139,24 +147,24 @@ class ReactMemeGenerator extends PureComponent {
       })
       .catch(err => {
         message.error(err);
-        this.setState({ drawLoading: false });
+        this.setState({drawLoading: false});
       });
   };
   closeImageWhellTip = () => {
     setImmediate(() => {
-      this.setState({ imageWhellTipVisible: false });
+      this.setState({imageWhellTipVisible: false});
     });
   };
   resizeImageScale = () => {
-    const { scale } = this.state;
+    const {scale} = this.state;
     if (scale != defaultScale) {
-      this.setState({ scale: defaultScale });
+      this.setState({scale: defaultScale});
     }
   };
   resetImageRotate = () => {
-    const { rotate } = this.state;
+    const {rotate} = this.state;
     if (rotate != defaultRotate) {
-      this.setState({ scale: defaultRotate });
+      this.setState({scale: defaultRotate});
     }
   };
 
@@ -164,7 +172,7 @@ class ReactMemeGenerator extends PureComponent {
     e.stopPropagation();
     const y = e.deltaY ? e.deltaY : e.wheelDeltaY;
     const [min, max] = textWhellScaleRange;
-    this.setState(({ fontSize }) => {
+    this.setState(({fontSize}) => {
       let _fontSize = fontSize;
       if (y > 0) {
         _fontSize -= textRange;
@@ -186,7 +194,7 @@ class ReactMemeGenerator extends PureComponent {
   bindImageMouseWheel = e => {
     const y = e.deltaY ? e.deltaY : e.wheelDeltaY;
     const [min, max] = whellScaleRange;
-    this.setState(({ scale }) => {
+    this.setState(({scale}) => {
       let _scale = scale;
       if (y > 0) {
         _scale -= range;
@@ -207,7 +215,7 @@ class ReactMemeGenerator extends PureComponent {
     return false;
   };
   fontSizeChange = value => {
-    this.setState({ fontSize: value });
+    this.setState({fontSize: value});
   };
   onSelectFile = () => {
     this.file.click();
@@ -218,11 +226,11 @@ class ReactMemeGenerator extends PureComponent {
   };
   renderImage = file => {
     if (file && Object.is(typeof file, "object")) {
-      let { type, name, size } = file;
+      let {type, name, size} = file;
       if (!isImage(type)) {
         return message.error("Ungültiges Bildformat");
       }
-      this.setState({ loading: true });
+      this.setState({loading: true});
       const url = window.URL.createObjectURL(file);
       this.setState({
         currentImg: {
@@ -291,46 +299,46 @@ class ReactMemeGenerator extends PureComponent {
     );
   };
   addDragAreaStyle = () => {
-    this.setState({ dragAreaClass: true });
+    this.setState({dragAreaClass: true});
   };
   removeDragAreaStyle = () => {
-    this.setState({ dragAreaClass: false });
+    this.setState({dragAreaClass: false});
   };
   onTextChange = e => {
-    this.setState({ text: e.target.value });
+    this.setState({text: e.target.value});
+  };
+  onNameChange = e => {
+    this.setState({name: e.target.value});
   };
   fontFamilyChange = value => {
-    this.setState({ font: value });
+    this.setState({font: value});
   };
-  stopDragText = (e, { x, y }) => {
+  stopDragText = (e, {x, y}) => {
     this.setState({
       textDragX: x,
       textDragY: y
     });
   };
-  stopDragImage = (e, { x, y }) => {
+  stopDragImage = (e, {x, y}) => {
     this.setState({
       imageDragX: x,
       imageDragY: y
     });
   };
   rotateImage = value => {
-    this.setState({ rotate: value });
+    this.setState({rotate: value});
   };
   toggleRotateStatus = e => {
     this.setState({
       isRotateText: e.target.checked
     });
   };
-  toggleText = e => {
-    this.setState({ toggleText: e.target.checked });
-  };
   pasteHandler = e => {
-    const { items, types } = e.clipboardData;
+    const {items, types} = e.clipboardData;
     if (!items) return;
 
     const item = items[0];
-    const { kind, type } = item;
+    const {kind, type} = item;
     if (kind.toLocaleLowerCase() != "file") {
       return message.error("Falscher Dateityp!");
     }
@@ -356,27 +364,28 @@ class ReactMemeGenerator extends PureComponent {
     });
   };
   turnImage = value => {
-    this.setState(({ isRotateX }) => ({
+    this.setState(({isRotateX}) => ({
       [isRotateX ? "rotateX" : "rotateY"]: value
     }));
   };
   turnRotateChange = e => {
-    this.setState({ isRotateX: e.target.value,rotateX:0,rotateY:0 });
+    this.setState({isRotateX: e.target.value, rotateX: 0, rotateY: 0});
   };
-  onCompress = (e)=>{
-    this.setState({isCompress:e.target.checked})
+  onCompress = (e) => {
+    this.setState({isCompress: e.target.checked})
   }
-  compressChange = (value)=>{
-    this.setState({quality:value})
+  compressChange = (value) => {
+    this.setState({quality: value})
   }
+
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const {getFieldDecorator} = this.props.form;
     const formItemLayout = {
-      labelCol: { span: 4 },
-      wrapperCol: { span: 14 }
+      labelCol: {span: 4},
+      wrapperCol: {span: 14}
     };
     const buttonItemLayout = {
-      wrapperCol: { span: 14, offset: 4 }
+      wrapperCol: {span: 14, offset: 4}
     };
 
     const {
@@ -384,8 +393,10 @@ class ReactMemeGenerator extends PureComponent {
       cameraUrl,
       fontColor,
       fontSize,
+      fontSizeName,
       font,
       text,
+      name,
       displayColorPicker,
       loading,
       loadingImgReady,
@@ -399,7 +410,6 @@ class ReactMemeGenerator extends PureComponent {
       rotate,
       scale,
       imageWhellTipVisible,
-      toggleText,
       memeModalVisible,
       drawLoading,
       rotateX,
@@ -414,6 +424,7 @@ class ReactMemeGenerator extends PureComponent {
     const {
       defaultFont,
       defaultFontSize,
+      defaultFontSizeName,
       defaultImageProcess,
       defaultText
     } = this.props;
@@ -422,7 +433,7 @@ class ReactMemeGenerator extends PureComponent {
     const valueSpan = 19;
     const offsetSpan = 1;
 
-    const operationRow = ({ icon = "edit", label, component }) => (
+    const operationRow = ({icon = "edit", label, component}) => (
       <Row className={`${prefix}-item`}>
         <Col span={labelSpan} className={`${prefix}-item-label`}>
           <Button type="dashed" icon={icon}>
@@ -445,14 +456,14 @@ class ReactMemeGenerator extends PureComponent {
 
     const previewImageEvents = loadingImgReady
       ? {
-          onWheel: this.bindImageMouseWheel,
-          onMouseLeave: this.closeImageWhellTip
-        }
+        onWheel: this.bindImageMouseWheel,
+        onMouseLeave: this.closeImageWhellTip
+      }
       : {};
 
     const previewImageSize = {
-      width:`${width}px`,
-      height:`${height}px`
+      width: `${width}px`,
+      height: `${height}px`
     }
 
     return (
@@ -462,7 +473,8 @@ class ReactMemeGenerator extends PureComponent {
           ref={previewArea => (this.previewArea = previewArea)}
         >
 
-          <Row type="flex" align="middle" className="preview-container" style={{alignItems: 'center'}}>
+          <Row type="flex" align="middle" className="preview-container"
+               style={{alignItems: 'center'}}>
             <Col>
               <Tooltip
                 placement="top"
@@ -489,14 +501,14 @@ class ReactMemeGenerator extends PureComponent {
                   {...previewImageEvents}
                   style={
                     isRotateText
-                      ? { ...imageTransFormConfig, ...previewImageSize }
+                      ? {...imageTransFormConfig, ...previewImageSize}
                       : previewImageSize
                   }
                 >
                   {loadingImgReady ? (
                     <Draggable
                       onStop={this.stopDragImage}
-                      defaultPosition={{ x: 0, y: 0 }}
+                      defaultPosition={{x: 0, y: 0}}
                     >
                       <div>
                         <img
@@ -511,31 +523,7 @@ class ReactMemeGenerator extends PureComponent {
                     undefined
                   )}
 
-                  {toggleText ? (
-                    text.split(/\n/).map((value, i) => {
-                      return (
-                        <Draggable
-                          bounds="parent"
-                          onStop={this.stopDragText}
-                          key={i}
-                          defaultPosition={{ x: 91, y: 132 }}
-                        >
-                          <div
-                            key={i}
-                            className={`${prefix}-text`}
-                            style={{
-                              color: fontColor,
-                              fontSize,
-                              fontFamily: font
-                            }}
-                          >
-                            {value}
-                          </div>
-                        </Draggable>
-                      );
-                    })
-                  ) : (
-                    <Draggable defaultPosition={{ x: 0, y: 0 }}>
+                  <Draggable defaultPosition={{x: 40, y: 100}}>
                       <pre
                         className={`${prefix}-text`}
                         style={{
@@ -546,9 +534,25 @@ class ReactMemeGenerator extends PureComponent {
                       >
                         {text}
                       </pre>
-                    </Draggable>
-                  )}
-                  <div className="preview-background"></div>
+                  </Draggable>
+
+                  <Draggable defaultPosition={{x: 236, y: 906}}>
+                      <pre
+                        className={`${prefix}-name`}
+                        style={{
+                          color: fontColor,
+                          fontSize: fontSizeName,
+                          fontFamily: font
+                        }}
+                      >
+                        {name}
+                      </pre>
+                  </Draggable>
+
+
+                  <div className="preview-background">
+                    <img src={logo}/>
+                  </div>
                 </div>
               </Tooltip>
 
@@ -575,18 +579,32 @@ class ReactMemeGenerator extends PureComponent {
             </Col>
           </Row>
           <Row type="flex">
-            <Col>
+            <Col span={24}>
               {operationRow({
                 label: "Text",
                 component: [
                   <TextArea
-                    rows={4}
+                    rows={8}
                     value={text}
                     placeholder="Bitte geben Sie ihr Statement ein"
                     onChange={this.onTextChange}
-                    style={{ marginBottom: 10 }}
+                    style={{marginBottom: 10}}
                     key="text-area"
-                    className="preview-image"
+                    className="main-text"
+                  />,
+                ]
+              })}
+              {operationRow({
+                label: "Name",
+                component: [
+                  <TextArea
+                    autosize={true}
+                    value={name}
+                    placeholder="Bitte geben Sie ihr Name ein"
+                    onChange={this.onNameChange}
+                    style={{marginBottom: 10}}
+                    key="text-area"
+                    className="name-text"
                   />,
                 ]
               })}
@@ -620,7 +638,7 @@ class ReactMemeGenerator extends PureComponent {
                     size="large"
                     onClick={this.drawMeme}
                     style={{
-                      width:"100%"
+                      width: "100%"
                     }}
                   >
                     {drawLoading ? "Bitte kurz warten..." : "Statement generieren"}
@@ -640,17 +658,19 @@ class ReactMemeGenerator extends PureComponent {
           onCancel={this.closeMemeModal}
           onOk={this.createMeme}
         >
-          <canvas ref={node => (this.memeCanvas = node)} />
+          <canvas ref={node => (this.memeCanvas = node)}/>
         </Modal>
       </Container>
     );
   }
+
   componentWillUnmount() {
-    const { drag, paste } = this.props;
+    const {drag, paste} = this.props;
     paste && this.unBindPasteListener(document.body);
   }
+
   componentDidMount() {
-    const { drag, paste } = this.props;
+    const {drag, paste} = this.props;
     drag && this.bindDragListener(this.previewContent);
     paste && this.bindPasteListener(document.body);
   }

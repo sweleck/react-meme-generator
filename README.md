@@ -1,6 +1,5 @@
 # react-statement-generator
 Create statements with your own image merge with a banner.
-![example](https://github.com/lijinke666/react-meme-generator/blob/master/assetsImg/example.gif)
 
 ## Example
 [https://sp.marcelcolomb.ch](https:/sp.marcelcolomb.ch/)

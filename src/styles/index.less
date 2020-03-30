@@ -48,6 +48,7 @@
     flex-direction: column;
     width: 100%;
     text-align: center;
+    margin-bottom: 2em;
   }
 
   .preview-content {
@@ -94,17 +95,26 @@
       top: 1px;
       background: linear-gradient(69deg, rgba(228,2,45,1) 41%, rgba(228,2,45,0) 100%);
       pointer-events: none;
+
+      img {
+        position: absolute;
+        bottom: 30px;
+        left: 40px;
+        width: 160px;
+      }
     }
   }
 
-  &-text {
+  &-text,
+  &-name {
     position: absolute;
     left: 0;
     top: 0;
     cursor: move;
     z-index: 99;
     margin: 0;
-    padding: 0
+    padding: 0;
+    text-align: left;
   }
 }
 
