@@ -11,7 +11,7 @@ module.exports = env => {
     entry:
       mode === "DEV"
         ? [
-            "react-hot-loader/patch", //热更新
+            "react-hot-loader/patch",
             `webpack-dev-server/client?http://${HOST}:${PORT}`,
             "webpack/hot/only-dev-server",
             path.join(__dirname, "../sp/sp.js")
@@ -22,7 +22,6 @@ module.exports = env => {
       path: path.join(__dirname, "../sp/dist"),
       filename: "build.js"
     },
-    //模块加载器
     module: {
       rules: [
         {

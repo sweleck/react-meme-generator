@@ -44,7 +44,7 @@ import {
   defaultQuality,
   defaultFontName,
   logo,
-  zoom
+  zoom as ZOOM
 } from "./config";
 
 import {isImage} from "./utils";
@@ -86,7 +86,6 @@ class ReactMemeGenerator extends PureComponent {
     isRotateX: false,
     isCompress: false,
     logo: logo,
-    zoom: zoom
   };
   activeDragAreaClass = "drag-active";
 
@@ -219,6 +218,9 @@ class ReactMemeGenerator extends PureComponent {
   fontSizeChange = value => {
     this.setState({fontSize: value});
   };
+  scaleChange = value => {
+    this.setState({scale: value});
+  };
   onSelectFile = () => {
     this.file.click();
   };
@@ -234,10 +236,12 @@ class ReactMemeGenerator extends PureComponent {
       }
       this.setState({loading: true});
       const url = window.URL.createObjectURL(file);
+
       this.setState({
         currentImg: {
           src: url,
           size: `${~~(size / 1024)}KB`,
+          width: 1080,
           type
         },
         scale: defaultScale,
@@ -418,7 +422,8 @@ class ReactMemeGenerator extends PureComponent {
       rotateY,
       width,
       height,
-      isCompress
+      isCompress,
+      zoom
     } = this.state;
 
     const _scale = scale.toFixed(2);
@@ -477,13 +482,25 @@ class ReactMemeGenerator extends PureComponent {
 
           <Row type="flex" align="middle" className="preview-container"
                style={{alignItems: 'center'}}>
-            <Col>
+            <div className="preview-inner-container">
+              <div className="scale">
+                <Slider
+                  vertical
+                  defaultValue={1.0}
+                  step={0.1}
+                  marks
+                  min={0.1}
+                  max={6}
+                  onChange={this.scaleChange}
+                  className="scale-slider"
+                />
+              </div>
               <Tooltip
                 placement="top"
                 title={[
                   <span className="tip-text" key="tip-text">
-                    Skalieren: {_scale}
-                  </span>,
+                      Skalieren: {_scale}
+                    </span>,
                   <Button
                     key="resize-btn"
                     className={`${prefix}-resize-btn`}
@@ -526,130 +543,111 @@ class ReactMemeGenerator extends PureComponent {
                   )}
 
                   <Draggable defaultPosition={{x: 40, y: 100}}>
-                      <pre
-                        className={`${prefix}-text`}
-                        style={{
-                          color: fontColor,
-                          fontSize,
-                          fontFamily: font
-                        }}
-                      >
-                        {text}
-                      </pre>
+                        <pre
+                          className={`${prefix}-text`}
+                          style={{
+                            color: fontColor,
+                            fontSize,
+                            fontFamily: font
+                          }}
+                        >
+                          {text}
+                        </pre>
                   </Draggable>
 
                   <Draggable defaultPosition={{x: 236, y: 906}}>
-                      <pre
-                        className={`${prefix}-name`}
-                        style={{
-                          color: fontColor,
-                          fontSize: fontSizeName,
-                          fontFamily: font
-                        }}
-                      >
-                        {name}
-                      </pre>
+                        <pre
+                          className={`${prefix}-name`}
+                          style={{
+                            color: fontColor,
+                            fontSize: fontSizeName,
+                            fontFamily: font
+                          }}
+                        >
+                          {name}
+                        </pre>
                   </Draggable>
 
 
                   <div className="preview-background">
                     <img src={logo}/>
                   </div>
-                </div>
+                  </div>
               </Tooltip>
+            </div>
 
-              <Row>
-                <input
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  ref={node => (this.file = node)}
-                  onChange={this.imageChange}
-                />
-                <Col span={24}>
-                  <Button
-                    icon="folder-add"
-                    type="dashed"
-                    size="large"
-                    loading={loading}
-                    onClick={this.onSelectFile}
-                  >
-                    {loading ? "Bild wird geladen" : "Wähle ein Bild"}
-                  </Button>
-                </Col>
-              </Row>
-            </Col>
+            <Row className="upload-button">
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                ref={node => (this.file = node)}
+                onChange={this.imageChange}
+              />
+              <Col span={24}>
+                <Button
+                  icon="folder-add"
+                  type="dashed"
+                  size="large"
+                  loading={loading}
+                  onClick={this.onSelectFile}
+                >
+                  {loading ? "Bild wird geladen" : "Wähle ein Bild"}
+                </Button>
+              </Col>
+            </Row>
           </Row>
-          <Row type="flex" className="input-text">
-            <Col span={24}>
-              {operationRow({
-                label: "Text",
-                component: [
-                  <TextArea
-                    rows={8}
-                    value={text}
-                    placeholder="Bitte geben Sie ihr Statement ein"
-                    onChange={this.onTextChange}
-                    style={{marginBottom: 10}}
-                    key="text-area"
-                    className="main-text"
-                  />,
-                ]
-              })}
-              {operationRow({
-                label: "Name",
-                component: [
-                  <TextArea
-                    autosize={true}
-                    value={name}
-                    placeholder="Bitte geben Sie ihr Name ein"
-                    onChange={this.onNameChange}
-                    style={{marginBottom: 10}}
-                    key="text-area"
-                    className="name-text"
-                  />,
-                ]
-              })}
+          <div className="input-text">
 
-              {operationRow({
-                icon: "file-word",
-                label: "Textgrösse",
-                component: (
-                  <Slider
-                    min={FONT_SIZE[0]}
-                    max={FONT_SIZE[FONT_SIZE.length - 1]}
-                    value={fontSize}
-                    defaultValue={defaultFontSize}
-                    tipFormatter={value => `${value}px`}
-                    onChange={this.fontSizeChange}
-                    marks={{
-                      [FONT_SIZE[0]]: `${FONT_SIZE[0]}px`,
-                      [FONT_SIZE[FONT_SIZE.length - 1]]: `${[
-                        FONT_SIZE[FONT_SIZE.length - 1]
-                      ]}px`
-                    }}
-                  />
-                )
-              })}
+            <TextArea
+              rows={6}
+              value={text}
+              placeholder="Bitte geben Sie ihr Statement ein"
+              onChange={this.onTextChange}
+              style={{marginBottom: 10}}
+              key="text-area"
+              className="main-text"
+            />
 
-              <Row>
-                <Col span={24}>
-                  <Button
-                    icon="star-o"
-                    loading={drawLoading}
-                    type="primary"
-                    size="large"
-                    onClick={this.drawMeme}
-                    style={{
-                      width: "100%"
-                    }}
-                  >
-                    {drawLoading ? "Bitte kurz warten..." : "Statement generieren"}
-                  </Button>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
+            <TextArea
+              autosize={true}
+              value={name}
+              placeholder="Bitte geben Sie ihr Name ein"
+              onChange={this.onNameChange}
+              style={{marginBottom: 10}}
+              key="text-area"
+              className="name-text"
+            />
+
+            <Slider
+              min={FONT_SIZE[0]}
+              max={FONT_SIZE[FONT_SIZE.length - 1]}
+              value={fontSize}
+              defaultValue={defaultFontSize}
+              tipFormatter={value => `${value}px`}
+              onChange={this.fontSizeChange}
+              marks={{
+                [FONT_SIZE[0]]: `${FONT_SIZE[0]}px`,
+                [FONT_SIZE[FONT_SIZE.length - 1]]: `${[
+                  FONT_SIZE[FONT_SIZE.length - 1]
+                ]}px`
+              }}
+            />
+
+            <Button
+              icon="star-o"
+              loading={drawLoading}
+              type="primary"
+              size="large"
+              onClick={this.drawMeme}
+              style={{
+                width: "100%"
+              }}
+            >
+              {drawLoading ? "Bitte kurz warten..." : "Statement generieren"}
+            </Button>
+
+          </div>
         </section>
 
         <Modal

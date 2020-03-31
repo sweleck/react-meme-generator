@@ -2,7 +2,7 @@
 Create statements with your own image merge with a banner.
 
 ## Example
-[https://sp.marcelcolomb.ch](https:/sp.marcelcolomb.ch/)
+[https://sp.marcelcolomb.ch](https://sp.marcelcolomb.ch/)
 
 ## Feature List
 
