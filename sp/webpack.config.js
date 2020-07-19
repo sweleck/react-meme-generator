@@ -12,8 +12,6 @@ module.exports = env => {
       mode === "DEV"
         ? [
             "react-hot-loader/patch",
-            `webpack-dev-server/client?http://${HOST}:${PORT}`,
-            "webpack/hot/only-dev-server",
             path.join(__dirname, "../sp/sp.js")
           ]
         : path.join(__dirname, "../sp/sp.js"),
@@ -65,7 +63,8 @@ module.exports = env => {
             {
               loader: "file-loader",
               options: {
-                name: "fonts/[name][hash:8].[ext]"
+                publicPath: "./fonts/",
+                name: "../fonts/[name].[ext]"
               }
             }
           ]
@@ -80,38 +79,10 @@ module.exports = env => {
     },
     externals: {
       async: "commonjs async"
-    },
-    devServer: {
-      contentBase: path.join(__dirname, "../sp/"),
-      inline: true,
-      port: PORT,
-      publicPath: "/dist/",
-      historyApiFallback: true,
-      stats: {
-        color: true,
-        errors: true,
-        version: true,
-        warnings: true,
-        progress: true
-      }
-    },
-    plugins: [
-      new OpenBrowserPlugin({
-        url: `http:${HOST}:${PORT}/`
-      })
-    ]
+    }
   };
   if (mode === "PROD") {
-    options.plugins = options.plugins.concat([
-      new webpack.optimize.UglifyJsPlugin({
-        output: {
-          comments: false
-        },
-        compress: {
-          warnings: false
-        }
-      })
-    ]);
+
   }
   return options;
 };

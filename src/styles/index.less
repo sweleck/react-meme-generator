@@ -3,6 +3,7 @@
 
 .react-meme {
   display: flex;
+  font-family: 'aktivgroteskBold';
 
   &-item {
     padding-bottom: 3%;
@@ -89,14 +90,31 @@
       z-index: 0;
       position: absolute;
       top: 1px;
-      background: linear-gradient(69deg, rgba(228, 2, 45, 1) 41%, rgba(228, 2, 45, 0) 100%);
+      background: #da3d44;
       pointer-events: none;
 
-      img {
+      .logo {
+        right: 50px;
         position: absolute;
         bottom: 30px;
-        left: 40px;
-        width: 160px;
+        width: 360px;
+      }
+
+      .portrait {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 540px;
+      }
+
+      .headerText {
+        font-size: 27px;
+        color: white;
+        text-align: right;
+        width: 350px;
+        position: absolute;
+        right: 40px;
+        top: 21px;
       }
     }
   }
@@ -105,16 +123,39 @@
     width: 100%;
   }
 
+  .ant-btn-primary {
+    background-color: @spRed;
+  }
+
   &-text,
   &-name {
+    z-index: 99;
+    margin: 0;
+    text-align: left;
+    line-height: 1.1;
+  }
+
+  &-text {
     position: absolute;
     left: 0;
     top: 0;
     cursor: move;
-    z-index: 99;
-    margin: 0;
-    padding: 0;
-    text-align: left;
+    background-color: @spGreen;
+    padding: 0px 20px 0px 20px;
+  }
+
+  &-name {
+    color: @spRed;
+    background-color: white;
+    padding: 0px 12px 0px 12px;
+
+  }
+
+  .nameWrapper {
+    position: absolute;
+    bottom: 110px;
+    left: 36px;
+    max-width: 570px;
   }
 
   .ant-slider-mark-text,
@@ -123,7 +164,7 @@
   }
 
   .input-text {
-    width: 59%;
+    width: 420px;
 
     .react-meme-item-label {
       display: none;

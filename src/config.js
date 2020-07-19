@@ -2,8 +2,9 @@ export const prefix = "react-meme"
 
 export const fontFamily = [
     {
-        label: "Helvetica",
-        value: "Helvetica"
+        label: "" +
+          "",
+        value: "aktivgroteskBold"
     }, {
         label: "cursive",
         value: "cursive"
@@ -44,13 +45,13 @@ export const imageProcess = [
     }
 ]
 
-export const fontSize = Array.from({ length: 150 }).map((_, i) => i + 1).filter(v => v >= 45)
+export const fontSize = Array.from({ length: 150 }).map((_, i) => i + 1).filter(v => v >= 35)
 
 export const zoom = Array.from({ length: 4 }).map((_, i) => i + 0.1).filter(v => v >= 1.0)
 
-export const defaultFontSize = fontSize[19]
+export const defaultFontSize = fontSize[13]
 
-export const defaultFontSizeName = 47
+export const defaultFontSizeName = 40
 
 export const defaultFontColor = "#ffffff"
 
@@ -79,5 +80,11 @@ export const previewContentStyle = {
     height: 1080
 }
 
-export const logo = 'src/logo/sp_logo.gif'
+export const headerText = "Grossratswahlen 2020 Kanton Basel-Stadt"
+
+export const logo = 'src/logo/sp_logos.png'
+
+export const aBold = 'src/fonts/AktivGroteskCorp-Bold.ttf'
+
+export const data = 'src/data/data.csv'
 

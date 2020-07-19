@@ -7,12 +7,9 @@ import Container from "./components/Container";
 import cls from "classnames";
 import {
   Button,
-  Divider,
-  Col,
   Row,
   Form,
   Input,
-  Checkbox,
   Modal,
   message,
   Select,
@@ -20,10 +17,10 @@ import {
   Tooltip,
   Radio
 } from "antd";
-import {SketchPicker} from "react-color";
 import Draggable from "react-draggable";
 import domToImage from "dom-to-image";
 import {hot} from "react-hot-loader";
+import {readRemoteFile} from 'react-papaparse';
 import {
   prefix,
   fontFamily,
@@ -33,7 +30,6 @@ import {
   defaultFontSize,
   defaultFontSizeName,
   fontSize as FONT_SIZE,
-  maxFileSize as IMG_MAX_SIZE,
   previewContentStyle,
   range,
   textRange,
@@ -44,7 +40,9 @@ import {
   defaultQuality,
   defaultFontName,
   logo,
-  zoom as ZOOM
+  aBold,
+  data,
+  headerText
 } from "./config";
 
 import {isImage} from "./utils";
@@ -86,6 +84,11 @@ class ReactMemeGenerator extends PureComponent {
     isRotateX: false,
     isCompress: false,
     logo: logo,
+    aBold: aBold,
+    data: data,
+    loading: true,
+    user: ['', '', ''],
+    headerText: headerText
   };
   activeDragAreaClass = "drag-active";
 
@@ -102,6 +105,7 @@ class ReactMemeGenerator extends PureComponent {
     drag: true,
     paste: true
   };
+
   imageWidthChange = e => {
     this.setState({width: e.target.value});
   };
@@ -110,9 +114,7 @@ class ReactMemeGenerator extends PureComponent {
   };
 
   drawMeme = () => {
-    const {width, height, loadingImgReady, isCompress} = this.state;
-    if (!loadingImgReady) return message.error("Bild Hochladen");
-
+    const {width, height, isCompress} = this.state;
     this.setState({drawLoading: true});
 
     var imageArea = document.querySelector(".preview-content");
@@ -218,16 +220,6 @@ class ReactMemeGenerator extends PureComponent {
   fontSizeChange = value => {
     this.setState({fontSize: value});
   };
-  scaleChange = value => {
-    this.setState({scale: value});
-  };
-  onSelectFile = () => {
-    this.file.click();
-  };
-  imageChange = () => {
-    const files = Array.from(this.file.files);
-    this.renderImage(files[0]);
-  };
   renderImage = file => {
     if (file && Object.is(typeof file, "object")) {
       let {type, name, size} = file;
@@ -313,9 +305,6 @@ class ReactMemeGenerator extends PureComponent {
   onTextChange = e => {
     this.setState({text: e.target.value});
   };
-  onNameChange = e => {
-    this.setState({name: e.target.value});
-  };
   fontFamilyChange = value => {
     this.setState({font: value});
   };
@@ -384,34 +373,38 @@ class ReactMemeGenerator extends PureComponent {
     this.setState({quality: value})
   }
 
-  render() {
-    const {getFieldDecorator} = this.props.form;
-    const formItemLayout = {
-      labelCol: {span: 4},
-      wrapperCol: {span: 14}
-    };
-    const buttonItemLayout = {
-      wrapperCol: {span: 14, offset: 4}
-    };
+  getCSVData = () => {
+    let queryString = window.location.search;
+    queryString = queryString.replace('/', '');
+    queryString = queryString.replace('?', '');
 
+    const parsedQuery = queryString;
+    readRemoteFile(data, {
+      complete: (results) => {
+        console.log('Results:', results);
+
+        var user = results.data.find(function (element) {
+          return element[0] === parsedQuery;
+        });
+
+        console.log(user);
+        this.setState({
+          loading: false,
+          user: user
+        });
+      }
+    })
+  }
+
+  render() {
     const {
-      cameraVisible,
-      cameraUrl,
       fontColor,
       fontSize,
       fontSizeName,
       font,
       text,
-      name,
-      displayColorPicker,
-      loading,
       loadingImgReady,
-      currentImg,
       dragAreaClass,
-      textDragX,
-      textDragY,
-      imageDragX,
-      imageDragY,
       isRotateText,
       rotate,
       scale,
@@ -421,41 +414,18 @@ class ReactMemeGenerator extends PureComponent {
       rotateX,
       rotateY,
       width,
-      height,
-      isCompress,
-      zoom
+      height
     } = this.state;
+
+    if (this.state.loading === true) {
+      this.getCSVData();
+    }
 
     const _scale = scale.toFixed(2);
 
     const {
-      defaultFont,
-      defaultFontSize,
-      defaultFontSizeName,
-      defaultImageProcess,
-      defaultText
+      defaultFontSize
     } = this.props;
-
-    const labelSpan = 4;
-    const valueSpan = 19;
-    const offsetSpan = 1;
-
-    const operationRow = ({icon = "edit", label, component}) => (
-      <Row className={`${prefix}-item`}>
-        <Col span={labelSpan} className={`${prefix}-item-label`}>
-          <Button type="dashed" icon={icon}>
-            {label}
-          </Button>
-        </Col>
-        <Col
-          span={valueSpan}
-          offset={offsetSpan}
-          className={`${prefix}-item-input`}
-        >
-          {component}
-        </Col>
-      </Row>
-    );
 
     const imageTransFormConfig = {
       transform: `rotate(${rotate}deg) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${_scale})`
@@ -483,18 +453,6 @@ class ReactMemeGenerator extends PureComponent {
           <Row type="flex" align="middle" className="preview-container"
                style={{alignItems: 'center'}}>
             <div className="preview-inner-container">
-              <div className="scale">
-                <Slider
-                  vertical
-                  defaultValue={1.0}
-                  step={0.1}
-                  marks
-                  min={0.1}
-                  max={6}
-                  onChange={this.scaleChange}
-                  className="scale-slider"
-                />
-              </div>
               <Tooltip
                 placement="top"
                 title={[
@@ -524,25 +482,8 @@ class ReactMemeGenerator extends PureComponent {
                       : previewImageSize
                   }
                 >
-                  {loadingImgReady ? (
-                    <Draggable
-                      onStop={this.stopDragImage}
-                      defaultPosition={{x: 0, y: 0}}
-                    >
-                      <div>
-                        <img
-                          className="preview-image"
-                          ref={node => (this.previewImage = node)}
-                          src={currentImg.src}
-                          style={loadingImgReady ? imageTransFormConfig : {}}
-                        />
-                      </div>
-                    </Draggable>
-                  ) : (
-                    undefined
-                  )}
 
-                  <Draggable defaultPosition={{x: 40, y: 100}}>
+                  <Draggable defaultPosition={{x: 36, y: 518}}>
                         <pre
                           className={`${prefix}-text`}
                           style={{
@@ -555,47 +496,34 @@ class ReactMemeGenerator extends PureComponent {
                         </pre>
                   </Draggable>
 
-                  <Draggable defaultPosition={{x: 236, y: 906}}>
-                        <pre
-                          className={`${prefix}-name`}
-                          style={{
-                            color: fontColor,
-                            fontSize: fontSizeName,
-                            fontFamily: font
-                          }}
-                        >
-                          {name}
-                        </pre>
-                  </Draggable>
-
 
                   <div className="preview-background">
-                    <img src={logo}/>
+                    <div className="headerText">
+                      {headerText}
+                    </div>
+                    <img
+                      className="portrait"
+                      src={"/src/data/" + this.state.user[2]}
+                    />
+                    <img
+                      className="logo"
+                      src={logo}
+                    />
+                    <div className="nameWrapper">
+                      <div
+                        className={`${prefix}-name`}
+                        style={{
+                          fontSize: fontSizeName,
+                          fontFamily: font
+                        }}
+                      >
+                        {this.state.user[1]}
+                      </div>
+                    </div>
                   </div>
-                  </div>
+                </div>
               </Tooltip>
             </div>
-
-            <Row className="upload-button">
-              <input
-                type="file"
-                className="hidden"
-                accept="image/*"
-                ref={node => (this.file = node)}
-                onChange={this.imageChange}
-              />
-              <Col span={24}>
-                <Button
-                  icon="folder-add"
-                  type="dashed"
-                  size="large"
-                  loading={loading}
-                  onClick={this.onSelectFile}
-                >
-                  {loading ? "Bild wird geladen" : "Wähle ein Bild"}
-                </Button>
-              </Col>
-            </Row>
           </Row>
           <div className="input-text">
 
@@ -607,16 +535,6 @@ class ReactMemeGenerator extends PureComponent {
               style={{marginBottom: 10}}
               key="text-area"
               className="main-text"
-            />
-
-            <TextArea
-              autosize={true}
-              value={name}
-              placeholder="Bitte geben Sie ihr Name ein"
-              onChange={this.onNameChange}
-              style={{marginBottom: 10}}
-              key="text-area"
-              className="name-text"
             />
 
             <Slider
@@ -635,7 +553,6 @@ class ReactMemeGenerator extends PureComponent {
             />
 
             <Button
-              icon="star-o"
               loading={drawLoading}
               type="primary"
               size="large"
