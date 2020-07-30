@@ -1,35 +1,5 @@
 export const prefix = "react-meme"
 
-export const fontFamily = [
-    {
-        label: "" +
-          "",
-        value: "aktivgroteskBold"
-    }, {
-        label: "cursive",
-        value: "cursive"
-    }, {
-        label: "SimSub",
-        value: "SimSub"
-    }, {
-        label: "SimHei",
-        value: "SimHei"
-    }, {
-        label: "KaiTi",
-        value: "KaiTi"
-    }, {
-        label: "STKaiti",
-        value: "STKaiti"
-    }, {
-        label: "LiSu",
-        value: "LiSu"
-    }, {
-        label: "YouYuan",
-        value: "YouYuan"
-    }
-]
-
-
 export const imageProcess = [
     {
         label: "default",
@@ -49,7 +19,7 @@ export const fontSize = Array.from({ length: 150 }).map((_, i) => i + 1).filter(
 
 export const zoom = Array.from({ length: 4 }).map((_, i) => i + 0.1).filter(v => v >= 1.0)
 
-export const defaultFontSize = fontSize[13]
+export const defaultFontSize = fontSize[25]
 
 export const defaultFontSizeName = 40
 

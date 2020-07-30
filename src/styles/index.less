@@ -1,198 +1,237 @@
 @import "./vars.less";
 @import "./mixins.less";
 
-.react-meme {
-  display: flex;
-  font-family: 'aktivgroteskBold';
+body {
+  line-height: 1;
 
-  &-item {
-    padding-bottom: 3%;
-  }
-
-  &-main {
-    padding: 10px 0 80px 0;
+  .react-meme {
     display: flex;
-  }
+    font-family: 'aktivgroteskBold';
 
-  .popover {
-    position: absolute;
-    left: 0;
-    top: 41px;
-    z-index: 999;
-    text-align: right;
-  }
-
-  .cover {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-
-  .preview-inner-container {
-    display: flex;
-
-    .scale {
-      margin-bottom: 1em;
-    }
-  }
-
-  .preview-container {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    text-align: center;
-    margin-bottom: 2em;
-  }
-
-  .preview-content {
-    width: 300px;
-    height: 300px;
-    border: 10px solid @border-color;
-    overflow: hidden;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 99;
-    transform: translate3d(0, 0, 0);
-    transition: .3s cubic-bezier(0.075, 0.82, 0.165, 1);
-    box-shadow: 26px 26px 30px 7px rgba(0, 0, 0, 0.2);
-
-    &:hover {
-      box-shadow: @shadow;
-      border-color: rgba(0, 0, 0, 0.09);
+    &-item {
+      padding-bottom: 3%;
     }
 
-    &.drag-active {
-      border: 2px dashed @border-color;
-      background-color: rgba(0, 0, 0, .1)
+    &-main {
+      padding: 10px 0 80px 0;
+      display: flex;
     }
 
-    .preview-image {
-      user-select: none;
-      cursor: -webkit-grab;
-      -webkit-user-drag: none;
-      width: 1080px;
+    .popover {
+      position: absolute;
+      left: 0;
+      top: 41px;
+      z-index: 999;
+      text-align: right;
+    }
 
-      img {
-        transition: transform 100ms cubic-bezier(0.25, 0.46, 0.33, 0.98)
+    .cover {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    .preview-inner-container {
+      display: flex;
+
+      .scale {
+        margin-bottom: 1em;
       }
     }
 
-    &.zoom {
-      zoom: 50%;
+    .preview-container {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 2em;
     }
 
-    .preview-background {
+    .preview-content {
+      width: 300px;
+      height: 300px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 99;
+      transform: translate3d(0, 0, 0);
+      transition: .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+      box-shadow: 26px 26px 30px 7px rgba(0, 0, 0, 0.2);
+
+      &.drag-active {
+        border: 2px dashed @border-color;
+        background-color: rgba(0, 0, 0, .1)
+      }
+
+      .preview-image {
+        user-select: none;
+        cursor: -webkit-grab;
+        -webkit-user-drag: none;
+        width: 1080px;
+      }
+
+      &.zoom {
+        zoom: 50%;
+      }
+
+      .preview-background {
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        position: absolute;
+        top: 1px;
+        background: #da3d44;
+        pointer-events: none;
+
+        .logo {
+          right: 50px;
+          position: absolute;
+          bottom: 30px;
+          width: 360px;
+        }
+
+        .portrait {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 540px;
+        }
+
+        .headerText {
+          font-size: 28px;
+          color: white;
+          text-align: right;
+          width: 350px;
+          position: absolute;
+          right: 40px;
+          top: 30px;
+          line-height: 1.3;
+        }
+      }
+    }
+
+    .upload-button {
+      width: 100%;
+    }
+
+    .ant-btn-primary {
+      background-color: @spRed;
+    }
+
+    &-text,
+    &-name {
+      z-index: 99;
+      margin: 0;
+      text-align: left;
+    }
+
+    &-text {
+      position: absolute;
+      left: 0;
+      top: 0;
+      cursor: move;
+      padding: 20px;
+      max-width: 80%;
+      overflow: hidden;
+    }
+
+    &-name {
+      color: @spRed;
+      background-color: white;
+      padding: 3px 12px 3px 12px;
+      font-size: 46px;
+    }
+
+    .text {
+      position: relative;
+      width: 100%;
+
+      span {
+        hyphens: auto;
+        background-color: @spGreen;
+        line-height: 1.1;
+        box-shadow: 0.5em 0 0 @spGreen, -0.5em 0 0 @spGreen;
+        white-space: pre-line;
+      }
+    }
+
+    .constituency {
+      font-size: 28px;
+      color: white;
+      text-align: right;
+      position: absolute;
+      bottom: 60px;
+      left: 46px;
+    }
+
+    .nameWrapper {
+      position: absolute;
+      bottom: 110px;
+      left: 46px;
+      max-width: 560px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .ant-slider-mark-text,
+    .ant-slider-mark-text-active {
+      color: #ffffff;
+    }
+
+    .input-text {
+      width: 420px;
+
+      .react-meme-item-label {
+        display: none;
+      }
+    }
+
+    .errorWrapper {
+      display: flex;
       width: 100%;
       height: 100%;
-      z-index: 0;
-      position: absolute;
-      top: 1px;
-      background: #da3d44;
-      pointer-events: none;
+      align-items: center;
+      justify-content: center;
 
-      .logo {
-        right: 50px;
-        position: absolute;
-        bottom: 30px;
-        width: 360px;
-      }
-
-      .portrait {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 540px;
-      }
-
-      .headerText {
-        font-size: 27px;
+      .error {
+        width: 60%;
+        background-color: @spRed;
         color: white;
-        text-align: right;
-        width: 350px;
-        position: absolute;
-        right: 40px;
-        top: 21px;
+        font-size: 60px;
+        text-align: center;
+        padding: 50px;
+        border-radius: 10px;
+        margin-top: 17%;
       }
     }
   }
 
-  .upload-button {
-    width: 100%;
+  .react-meme-resize-btn {
+    margin-left: 10px;
   }
 
-  .ant-btn-primary {
-    background-color: @spRed;
-  }
+  @media all and (max-width: 768px) {
+    body {
+      .react-meme {
+        .react-meme-main {
+          flex-direction: column;
+          align-items: center;
 
-  &-text,
-  &-name {
-    z-index: 99;
-    margin: 0;
-    text-align: left;
-    line-height: 1.1;
-  }
+          .preview-container {
+            .zoom {
+              zoom: 29%;
+            }
+          }
 
-  &-text {
-    position: absolute;
-    left: 0;
-    top: 0;
-    cursor: move;
-    background-color: @spGreen;
-    padding: 0px 20px 0px 20px;
-  }
-
-  &-name {
-    color: @spRed;
-    background-color: white;
-    padding: 0px 12px 0px 12px;
-
-  }
-
-  .nameWrapper {
-    position: absolute;
-    bottom: 110px;
-    left: 36px;
-    max-width: 570px;
-  }
-
-  .ant-slider-mark-text,
-  .ant-slider-mark-text-active {
-    color: #ffffff;
-  }
-
-  .input-text {
-    width: 420px;
-
-    .react-meme-item-label {
-      display: none;
-    }
-  }
-}
-
-.react-meme-resize-btn {
-  margin-left: 10px;
-}
-
-@media all and (max-width: 768px) {
-  body {
-    .react-meme {
-      .react-meme-main {
-        flex-direction: column;
-        align-items: center;
-
-        .preview-container {
-          .zoom {
-            zoom: 29%;
+          .input-text {
+            width: 75%;
           }
         }
-
-        .input-text {
-          width: 75%;
-        }
       }
     }
   }
+
 }
