@@ -22,12 +22,16 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.10.4",
     "antd": "^3.5.1",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
     "classnames": "^2.2.5",
     "dom-to-image": "^2.6.0",
     "react": "^16.2.0",
     "react-draggable": "^3.0.4",
-    "react-papaparse": "^3.4.0"
+    "react-papaparse": "^3.4.0",
+    "react-spinners-kit": "^1.9.1"
   },
   "devDependencies": {
     "@babel/cli": "7.0.0-beta.44",

@@ -17,6 +17,7 @@ import Draggable from "react-draggable";
 import domToImage from "dom-to-image";
 import {hot} from "react-hot-loader";
 import {readRemoteFile} from 'react-papaparse';
+import { RotateSpinner } from "react-spinners-kit";
 import {
   prefix,
   defaultFontText,
@@ -26,8 +27,6 @@ import {
   defaultFontSizeName,
   fontSize as FONT_SIZE,
   previewContentStyle,
-  defaultScale,
-  defaultRotate,
   defaultQuality,
   logo,
   data,
@@ -38,27 +37,16 @@ const {TextArea} = Input;
 
 class ReactMemeGenerator extends PureComponent {
   state = {
-    cameraVisible: false,
-    displayColorPicker: false,
     fontColor: defaultFontColor,
     fontSize: defaultFontSize,
     fontSizeName: defaultFontSizeName,
     text: defaultFontText,
-    loadingImgReady: false,
     dragAreaClass: false,
     textDragX: 0,
     textDragY: 0,
-    imageDragX: 0,
-    imageDragY: 0,
-    isRotateText: false,
-    rotate: defaultRotate,
-    scale: defaultScale,
     width: previewContentStyle.width,
     height: previewContentStyle.height,
     drawLoading: false,
-    rotateX: 0,
-    rotateY: 0,
-    isRotateX: false,
     isCompress: false,
     logo: logo,
     data: data,
@@ -89,6 +77,9 @@ class ReactMemeGenerator extends PureComponent {
     let imageArea = document.querySelector(".preview-content");
     imageArea.classList.toggle('zoom');
 
+    let loadingOverlay = document.querySelector(".loadingOverlay");
+    loadingOverlay.classList.toggle('hidden');
+
     const options = {
       width,
       height,
@@ -98,44 +89,46 @@ class ReactMemeGenerator extends PureComponent {
       options.quality = defaultQuality
     }
 
+    // evil safari hack. Image only in dom after second render.
     setTimeout(() => {
-      console.log('Hello, World!')
-    }, 50);
-
-    let imageArea2 = document.querySelector(".preview-content");
-
-    console.log(options);
-    console.log(imageArea2);
-
-    domToImage
-      .toPng(imageArea2)
-      .then(dataUrl => {
-        this.setState({drawLoading: false});
-        Modal.confirm({
-          title: "Erfolgreich generiert",
-          content: <img src={dataUrl} style={{maxWidth: "100%"}}/>,
-          onOk: () => {
-            message.success("Erfolgreich!");
-            const filename = Date.now() + '_sp-statement';
-            const ext = isCompress ? 'jpeg' : 'png';
-            let link = document.createElement("a");
-            link.download = `${filename}.${ext}`;
-            link.href = dataUrl;
-            let imageArea = document.querySelector(".preview-content");
-            imageArea.classList.toggle('zoom');
-            link.click();
-          },
-          onCancel: () => {
-            imageArea.classList.toggle('zoom');
-          },
-          okText: "Herunterladen",
-          cancelText: "Ändern"
+      domToImage
+        .toPng(imageArea)
+        .then(dataUrl => {
+          domToImage
+            .toPng(imageArea)
+            .then(dataUrl => {
+              this.setState({drawLoading: false});
+              Modal.confirm({
+                title: "Erfolgreich generiert",
+                content: <img src={dataUrl} style={{maxWidth: "100%"}}/>,
+                onOk: () => {
+                  message.success("Erfolgreich!");
+                  const filename = Date.now() + '_sp-statement';
+                  const ext = isCompress ? 'jpeg' : 'png';
+                  let link = document.createElement("a");
+                  link.download = `${filename}.${ext}`;
+                  link.href = dataUrl;
+                  let imageArea = document.querySelector(".preview-content");
+                  imageArea.classList.toggle('zoom');
+                  loadingOverlay.classList.toggle('hidden');
+                  link.click();
+                },
+                onCancel: () => {
+                  imageArea.classList.toggle('zoom');
+                  loadingOverlay.classList.toggle('hidden');
+                },
+                okText: "Herunterladen",
+                cancelText: "Ändern"
+              });
+            });
+        })
+        .catch(err => {
+          message.error(err);
+          this.setState({drawLoading: false});
         });
-      })
-      .catch(err => {
-        message.error(err);
-        this.setState({drawLoading: false});
-      });
+    }, 100);
+
+
   };
 
   fontSizeChange = value => {
@@ -276,6 +269,9 @@ class ReactMemeGenerator extends PureComponent {
 
     return (
       <Container className={prefix}>
+        <div className="loadingOverlay hidden">
+          <RotateSpinner size={60} color="#ffffff" loading={true} />
+        </div>
         <section
           className={`${prefix}-main`}
           ref={previewArea => (this.previewArea = previewArea)}
