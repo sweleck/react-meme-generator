@@ -216,7 +216,7 @@ class ReactMemeGenerator extends PureComponent {
           return element[0] === parsedQuery;
         });
 
-        if (!user) {
+        if (!user || user[0] === "") {
           this.setState({
             loading: false,
             error: true
@@ -243,7 +243,11 @@ class ReactMemeGenerator extends PureComponent {
 
     if (this.state.loading === true) {
       this.getCSVData();
-      return null;
+      return (
+        <div className="loadingOverlay hidden">
+          <RotateSpinner size={60} color="#ffffff" loading={true} />
+        </div>
+      );
     }
 
     if (this.state.error === true) {
