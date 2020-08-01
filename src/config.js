@@ -54,7 +54,5 @@ export const headerText = "Grossratswahlen 2020 Kanton Basel-Stadt"
 
 export const logo = 'src/logo/sp_logos.png'
 
-export const aBold = 'src/fonts/AktivGroteskCorp-Bold.ttf'
-
 export const data = 'src/data/data.csv'
 

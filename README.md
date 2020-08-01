@@ -1,21 +1,26 @@
 # react-statement-generator
-Create statements with your own image merge with a banner.
+Create custom statments saved as png.
+
+Read data from src/data/data.csv
+["url","firstname","lastname","image_name"]
 
 ## Example
-[https://sp.marcelcolomb.ch](https://sp.marcelcolomb.ch/)
-
-## Feature List
-
-- [x] Picture size control
-- [x] Support drag and paste selection images
+[https://sp.marcelcolomb.ch/?test](https://sp.marcelcolomb.ch/?test)
 
 
 ## Development
 ```
-git clone https://github.com/lijinke666/react-meme-generator.git
+git clone https://github.com/sweleck/react-statement-generator.git
 npm install | yarn
-npm electron
+
+Create src/data/data.csv
+["url","firstname","lastname","image_name"]
+
+npm run-script build
+
 ```
+
+
 
 ## License
 [MIT](https://github.com/sweleck/react-statement-generator/blob/master/LICENCE)
