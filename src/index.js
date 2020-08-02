@@ -76,6 +76,7 @@ class ReactMemeGenerator extends PureComponent {
 
     let imageArea = document.querySelector(".preview-content");
     imageArea.classList.toggle('zoom');
+    imageArea.classList.toggle('noShadow');
 
     let loadingOverlay = document.querySelector(".loadingOverlay");
     loadingOverlay.classList.toggle('hidden');
@@ -95,7 +96,7 @@ class ReactMemeGenerator extends PureComponent {
         .toPng(imageArea)
         .then(dataUrl => {
           domToImage
-            .toPng(imageArea)
+            .toPng(imageArea, options)
             .then(dataUrl => {
               this.setState({drawLoading: false});
               Modal.confirm({
@@ -110,11 +111,13 @@ class ReactMemeGenerator extends PureComponent {
                   link.href = dataUrl;
                   let imageArea = document.querySelector(".preview-content");
                   imageArea.classList.toggle('zoom');
+                  imageArea.classList.toggle('noShadow');
                   loadingOverlay.classList.toggle('hidden');
                   link.click();
                 },
                 onCancel: () => {
                   imageArea.classList.toggle('zoom');
+                  imageArea.classList.toggle('noShadow');
                   loadingOverlay.classList.toggle('hidden');
                 },
                 okText: "Herunterladen",

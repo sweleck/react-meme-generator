@@ -77,14 +77,6 @@ body {
       margin-bottom: 20px;
       position: relative;
       z-index: 99;
-      transform: translate3d(0, 0, 0);
-      transition: .3s cubic-bezier(0.075, 0.82, 0.165, 1);
-      box-shadow: 26px 26px 30px 7px rgba(0, 0, 0, 0.2);
-
-      &.drag-active {
-        border: 2px dashed @border-color;
-        background-color: rgba(0, 0, 0, .1)
-      }
 
       .preview-image {
         user-select: none;
@@ -168,8 +160,12 @@ body {
         background-color: @spGreen;
         line-height: 1.2;
         box-shadow: 0.5em 0 0 @spGreen, -0.5em 0 0 @spGreen;
-        white-space: pre-line;
+        white-space: pre-wrap;
         font-weight: 900;
+        webkit-box-decoration-break: clone;
+        -ms-box-decoration-break: clone;
+        -o-box-decoration-break: clone;
+        box-decoration-break: clone;
       }
     }
 
