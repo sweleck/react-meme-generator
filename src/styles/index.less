@@ -158,12 +158,6 @@ body {
       overflow: hidden;
     }
 
-    &-name {
-      color: @spRed;
-      background-color: white;
-      padding: 3px 12px 3px 12px;
-      font-size: 46px;
-    }
 
     .text {
       position: relative;
@@ -172,7 +166,7 @@ body {
       span {
         hyphens: auto;
         background-color: @spGreen;
-        line-height: 1.1;
+        line-height: 1.2;
         box-shadow: 0.5em 0 0 @spGreen, -0.5em 0 0 @spGreen;
         white-space: pre-line;
         font-weight: 900;
@@ -192,10 +186,26 @@ body {
     .nameWrapper {
       position: absolute;
       bottom: 110px;
-      left: 46px;
+      left: 55px;
       max-width: 560px;
       display: flex;
       flex-wrap: wrap;
+      text-align: left;
+
+      .spanWrapper {
+        position: relative;
+        width: 100%;
+
+        span {
+          line-height: 1.2;
+          box-shadow: 0.3em 0 0 white, -0.3em 0 0 white;
+          white-space: pre-line;
+          color: @spRed;
+          background-color: white;
+          font-size: 46px;
+          text-align: left;
+        }
+      }
     }
 
     .ant-slider-mark-text,
@@ -233,6 +243,25 @@ body {
 
   .react-meme-resize-btn {
     margin-left: 10px;
+  }
+
+  .author {
+    position: fixed;
+    right: 7px;
+    bottom: 5px;
+    color: white;
+    font-size: 9px;
+    background-color: @spGreen;
+    line-height: 1.2;
+    box-shadow: 0.5em 0 0 @spGreen, -0.5em 0 0 @spGreen;
+  }
+
+  a {
+    color: white;
+  }
+
+  a:hover {
+    color: white;
   }
 }
 

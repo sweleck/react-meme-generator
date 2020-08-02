@@ -318,15 +318,10 @@ class ReactMemeGenerator extends PureComponent {
                     src={logo}
                   />
                   <div className="nameWrapper">
-                    <div
-                      className={`${prefix}-name`}
-                    >
-                      {this.state.user[1]}
-                    </div>
-                    <div
-                      className={`${prefix}-name`}
-                    >
-                      {this.state.user[2]}
+                    <div className="spanWrapper">
+                      <span>
+                        {this.state.user[1]} {this.state.user[2]}
+                      </span>
                     </div>
                   </div>
                   <div className="constituency">
@@ -377,6 +372,9 @@ class ReactMemeGenerator extends PureComponent {
           </div>
 
         </section>
+        <div className="author">
+          <a href="https://twitter.com/MarcelColomb">von Marcel Colomb</a>
+        </div>
       </Container>
     );
   }
