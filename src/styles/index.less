@@ -234,26 +234,37 @@ body {
   .react-meme-resize-btn {
     margin-left: 10px;
   }
+}
 
-  @media all and (max-width: 768px) {
-    body {
-      .react-meme {
-        .react-meme-main {
-          flex-direction: column;
-          align-items: center;
+@media all and (max-width: 768px) {
+  body {
+    .react-meme {
+      .react-meme-main {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
 
-          .preview-container {
-            .zoom {
-              zoom: 29%;
-            }
+        .preview-content {
+          &.zoom {
+            zoom: 29%;
           }
+        }
+        .input-text {
+          width: 75%;
+        }
+      }
 
-          .input-text {
-            width: 75%;
-          }
+      .errorWrapper {
+        .error {
+          width: 92%;
+          margin-top: 33%;
+          font-size: 27px;
         }
       }
     }
-  }
 
+    .ant-modal-wrap {
+      width: 100vw;
+    }
+  }
 }
